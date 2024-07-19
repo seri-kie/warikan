@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:warikan/pages/calculate_page.dart';
 import 'package:warikan/pages/event_page.dart';
+import 'package:warikan/pages/setting_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({
@@ -14,7 +15,7 @@ class MainPage extends StatefulWidget {
 class _MyHomePageState extends State<MainPage> {
   int _selectedIndex = 0;
 
-  final pages = [const CalculatePage(), const EventPage()];
+  final pages = [const CalculatePage(), const EventPage(), const SettingPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +38,8 @@ class _MyHomePageState extends State<MainPage> {
               label: '割り勘'),
           NavigationDestination(
               icon: Icon(size: 35, Icons.event), label: 'イベント'),
+          NavigationDestination(
+              icon: Icon(size: 35, Icons.settings), label: '設定'),
         ],
       ),
     );

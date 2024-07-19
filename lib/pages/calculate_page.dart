@@ -5,8 +5,25 @@ class CalculatePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('割り勘ページ'),
-    );
+    return DefaultTabController(
+        initialIndex: 0,
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const TabBar(
+              tabs: [
+                Tab(
+                  text: 'ノーマル割り勘',
+                ),
+                Tab(
+                  text: '傾斜割り勘',
+                )
+              ],
+            ),
+          ),
+          body: const TabBarView(
+            children: [Text('ノーマル'), Text('傾斜')],
+          ),
+        ));
   }
 }
