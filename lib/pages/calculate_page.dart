@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:warikan/pages/normal_calculate_page.dart';
 
 class CalculatePage extends StatelessWidget {
   const CalculatePage({super.key});
@@ -22,7 +23,7 @@ class CalculatePage extends StatelessWidget {
             ),
           ),
           body: const TabBarView(
-            children: [Text('ノーマル'), Text('傾斜')],
+            children: [NormalCalculatePage(), Text('傾斜')],
           ),
         ));
   }
