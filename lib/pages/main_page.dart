@@ -22,7 +22,6 @@ class _MyHomePageState extends State<MainPage> {
     return Scaffold(
       body: pages[_selectedIndex],
       bottomNavigationBar: NavigationBar(
-        elevation: 30,
         selectedIndex: _selectedIndex,
         onDestinationSelected: (value) {
           setState(() {

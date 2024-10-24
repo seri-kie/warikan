@@ -1,63 +1,33 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:warikan/gen/assets.gen.dart';
+import 'package:warikan/models/calc_result.dart';
+import 'package:warikan/models/total_amount.dart';
+import 'package:warikan/models/total_people.dart';
 
 enum FractionRound { none, roundUp, roundDown }
 
-class NormalCalculatePage extends StatefulWidget {
+class NormalCalculatePage extends ConsumerStatefulWidget {
   const NormalCalculatePage({super.key});
 
   @override
-  State<NormalCalculatePage> createState() => _NormalCalculatePageState();
+  _NormalCalculatePageState createState() => _NormalCalculatePageState();
 }
 
-class _NormalCalculatePageState extends State<NormalCalculatePage> {
+class _NormalCalculatePageState extends ConsumerState {
   Set<FractionRound> selected = {FractionRound.none};
   int fraction = 1;
   @override
   Widget build(BuildContext context) {
+    final calcResult = ref.watch(calcResultProvider);
     return Column(
       children: [
         Row(
           children: [
-            Container(
-              margin: const EdgeInsets.all(20),
-              width: MediaQuery.of(context).size.width * 0.55,
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                    ),
-                    prefixIcon: Icon(Icons.monetization_on_outlined),
-                    labelText: '合計金額',
-                    suffix: Text(
-                      '円',
-                      style: TextStyle(color: Colors.black),
-                    )),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.only(right: 20),
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                      ),
-                      prefixIcon: Icon(Icons.group),
-                      labelText: '人数',
-                      suffix: Text(
-                        '人',
-                        style: TextStyle(color: Colors.black),
-                      )),
-                ),
-              ),
-            ),
+            _inputTotalAmount(),
+            Expanded(child: _inputTotalPeople(ref)),
           ],
         ),
         const Text(
@@ -149,19 +119,75 @@ class _NormalCalculatePageState extends State<NormalCalculatePage> {
           ),
         Container(
             alignment: Alignment.center,
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            width: double.infinity,
-            height: 300,
+            width: 250,
+            height: 200,
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage(Assets.images.bgWarikan.path),
                     fit: BoxFit.fitWidth)),
-            child: const AutoSizeText(
-              maxLines: 2,
-              'ここに割り勘結果を表示',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            child: AutoSizeText(
+              calcResult == -1 ? 'ここに割り勘結果を表示' : '1人:$calcResult円',
+              maxLines: 3,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ))
       ],
+    );
+  }
+
+  Widget _inputTotalAmount() {
+    return Container(
+      margin: const EdgeInsets.all(20),
+      width: MediaQuery.of(context).size.width * 0.55,
+      child: TextFormField(
+        keyboardType: TextInputType.number,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        textInputAction: TextInputAction.next,
+        onFieldSubmitted: (value) {
+          ref.read(totalAmountProvider.notifier).set(int.parse(value));
+          if (ref.read(totalPeopleProvider.notifier).hasValue()) {
+            ref.read(calcResultProvider.notifier).divide();
+          }
+        },
+        decoration: const InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4.0)),
+            ),
+            prefixIcon: Icon(Icons.monetization_on_outlined),
+            labelText: '合計金額',
+            suffix: Text(
+              '円',
+              style: TextStyle(color: Colors.black),
+            )),
+      ),
+    );
+  }
+
+  Widget _inputTotalPeople(WidgetRef ref) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      width: MediaQuery.of(context).size.width * 0.55,
+      child: TextFormField(
+        keyboardType: TextInputType.number,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        textInputAction: TextInputAction.next,
+        onFieldSubmitted: (value) {
+          ref.read(totalPeopleProvider.notifier).set(int.parse(value));
+
+          if (ref.read(totalAmountProvider.notifier).hasValue()) {
+            ref.read(calcResultProvider.notifier).divide();
+          }
+        },
+        decoration: const InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4.0)),
+            ),
+            prefixIcon: Icon(Icons.group),
+            labelText: '人数',
+            suffix: Text(
+              '人',
+              style: TextStyle(color: Colors.black),
+            )),
+      ),
     );
   }
 }
