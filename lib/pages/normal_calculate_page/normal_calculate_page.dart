@@ -3,41 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:warikan/gen/assets.gen.dart';
-import 'package:warikan/models/calc_result.dart';
-import 'package:warikan/models/total_amount.dart';
-import 'package:warikan/models/total_people.dart';
+import 'package:warikan/pages/normal_calculate_page/normal_calculate_page_controller.dart';
 
-enum FractionRound { none, roundUp, roundDown }
+class NormalCalculatePage extends ConsumerWidget {
+  final int fraction = 1;
 
-class NormalCalculatePage extends ConsumerStatefulWidget {
   const NormalCalculatePage({super.key});
 
   @override
-  _NormalCalculatePageState createState() => _NormalCalculatePageState();
-}
-
-class _NormalCalculatePageState extends ConsumerState {
-  Set<FractionRound> selected = {FractionRound.none};
-  int fraction = 1;
-  @override
-  Widget build(BuildContext context) {
-    final calcResult = ref.watch(calcResultProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    Set<FractionRound> selected = {FractionRound.none};
+    final calcResult =
+        ref.watch(normalCalculatePageControllerProvider).calcResult;
     return Column(
       children: [
         Row(
           children: [
-            _inputTotalAmount(),
-            Expanded(child: _inputTotalPeople(ref)),
+            _inputTotalAmount(context, ref),
+            Expanded(child: _inputTotalPeople(context, ref)),
           ],
         ),
         const Text(
           '端数処理',
         ),
-        SegmentedButton(
+        SegmentedButton<FractionRound>(
             onSelectionChanged: (value) {
-              setState(() {
-                selected = value;
-              });
+              selected = value;
+              ref
+                  .read(normalCalculatePageControllerProvider.notifier)
+                  .setFraction(selected.contains(FractionRound.none)
+                      ? FractionRound.none
+                      : selected.first);
             },
             style: SegmentedButton.styleFrom(
                 backgroundColor: Colors.grey[350],
@@ -64,7 +60,8 @@ class _NormalCalculatePageState extends ConsumerState {
         const SizedBox(
           height: 10,
         ),
-        if (!selected.contains(FractionRound.none))
+        if (ref.watch(normalCalculatePageControllerProvider).fraction !=
+            FractionRound.none)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
@@ -76,9 +73,9 @@ class _NormalCalculatePageState extends ConsumerState {
                   selectedColor: const Color.fromARGB(255, 104, 245, 172),
                   selected: fraction == 1,
                   onSelected: (_) {
-                    setState(() {
-                      fraction = 1;
-                    });
+                    ref
+                        .read(normalCalculatePageControllerProvider.notifier)
+                        .setFractionPrice(1);
                   },
                 ),
                 ChoiceChip(
@@ -87,9 +84,9 @@ class _NormalCalculatePageState extends ConsumerState {
                   selectedColor: const Color.fromARGB(255, 104, 245, 172),
                   selected: fraction == 10,
                   onSelected: (_) {
-                    setState(() {
-                      fraction = 10;
-                    });
+                    ref
+                        .read(normalCalculatePageControllerProvider.notifier)
+                        .setFractionPrice(10);
                   },
                 ),
                 ChoiceChip(
@@ -98,9 +95,9 @@ class _NormalCalculatePageState extends ConsumerState {
                   selectedColor: const Color.fromARGB(255, 104, 245, 172),
                   selected: fraction == 100,
                   onSelected: (_) {
-                    setState(() {
-                      fraction = 100;
-                    });
+                    ref
+                        .read(normalCalculatePageControllerProvider.notifier)
+                        .setFractionPrice(100);
                   },
                 ),
                 ChoiceChip(
@@ -109,9 +106,9 @@ class _NormalCalculatePageState extends ConsumerState {
                   selectedColor: const Color.fromARGB(255, 104, 245, 172),
                   selected: fraction == 1000,
                   onSelected: (_) {
-                    setState(() {
-                      fraction = 1000;
-                    });
+                    ref
+                        .read(normalCalculatePageControllerProvider.notifier)
+                        .setFractionPrice(1000);
                   },
                 ),
               ],
@@ -125,16 +122,25 @@ class _NormalCalculatePageState extends ConsumerState {
                 image: DecorationImage(
                     image: AssetImage(Assets.images.bgWarikan.path),
                     fit: BoxFit.fitWidth)),
-            child: AutoSizeText(
-              calcResult == -1 ? 'ここに割り勘結果を表示' : '1人:$calcResult円',
-              maxLines: 3,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: AutoSizeText(
+                calcResult == -1
+                    ? '金額と人数を入力してください'
+                    : (calcResult % 1 == 0 // 整数の場合
+                        ? '1人:${calcResult.toStringAsFixed(0)}円' // 整数として表示
+                        : '1人:${calcResult.toStringAsFixed(3)}円'), // それ以外は小数点以下3桁
+                maxLines: 1,
+                overflow: TextOverflow.clip,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
             ))
       ],
     );
   }
 
-  Widget _inputTotalAmount() {
+  Widget _inputTotalAmount(BuildContext context, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.all(20),
       width: MediaQuery.of(context).size.width * 0.55,
@@ -143,10 +149,11 @@ class _NormalCalculatePageState extends ConsumerState {
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         textInputAction: TextInputAction.next,
         onFieldSubmitted: (value) {
-          ref.read(totalAmountProvider.notifier).set(int.parse(value));
-          if (ref.read(totalPeopleProvider.notifier).hasValue()) {
-            ref.read(calcResultProvider.notifier).divide();
-          }
+          ref
+              .read(normalCalculatePageControllerProvider.notifier)
+              .setInputAmount(int.parse(value));
+          debugPrint('inputTotal: ${int.parse(value)}');
+          ref.read(normalCalculatePageControllerProvider.notifier).divide();
         },
         decoration: const InputDecoration(
             border: OutlineInputBorder(
@@ -162,20 +169,20 @@ class _NormalCalculatePageState extends ConsumerState {
     );
   }
 
-  Widget _inputTotalPeople(WidgetRef ref) {
+  Widget _inputTotalPeople(BuildContext context, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
       width: MediaQuery.of(context).size.width * 0.55,
       child: TextFormField(
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        textInputAction: TextInputAction.next,
         onFieldSubmitted: (value) {
-          ref.read(totalPeopleProvider.notifier).set(int.parse(value));
-
-          if (ref.read(totalAmountProvider.notifier).hasValue()) {
-            ref.read(calcResultProvider.notifier).divide();
-          }
+          ref
+              .read(normalCalculatePageControllerProvider.notifier)
+              .setInputPeople(int.parse(value));
+          debugPrint(
+              'inputTotal: ${ref.read(normalCalculatePageControllerProvider).inputPeople}');
+          ref.read(normalCalculatePageControllerProvider.notifier).divide();
         },
         decoration: const InputDecoration(
             border: OutlineInputBorder(

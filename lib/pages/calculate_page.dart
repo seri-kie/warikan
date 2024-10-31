@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:warikan/pages/normal_calculate_page.dart';
+import 'package:warikan/pages/normal_calculate_page/normal_calculate_page.dart';
 
 class CalculatePage extends StatelessWidget {
   const CalculatePage({super.key});
