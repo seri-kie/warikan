@@ -22,8 +22,8 @@ class CalculatePage extends StatelessWidget {
               ],
             ),
           ),
-          body: const TabBarView(
-            children: [NormalCalculatePage(), Text('傾斜')],
+          body: TabBarView(
+            children: [NormalCalculatePage(), const Text('傾斜')],
           ),
         ));
   }

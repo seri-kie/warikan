@@ -7,12 +7,12 @@ import 'package:warikan/pages/normal_calculate_page/normal_calculate_page_contro
 
 class NormalCalculatePage extends ConsumerWidget {
   final int fraction = 1;
+  Set<FractionRound> selected = {FractionRound.none};
 
-  const NormalCalculatePage({super.key});
+  NormalCalculatePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Set<FractionRound> selected = {FractionRound.none};
     final calcResult =
         ref.watch(normalCalculatePageControllerProvider).calcResult;
     return Column(
@@ -71,7 +71,10 @@ class NormalCalculatePage extends ConsumerWidget {
                   label: const Text("1円"),
                   backgroundColor: Colors.grey[350],
                   selectedColor: const Color.fromARGB(255, 104, 245, 172),
-                  selected: fraction == 1,
+                  selected: ref
+                          .watch(normalCalculatePageControllerProvider)
+                          .fractionPrice ==
+                      1,
                   onSelected: (_) {
                     ref
                         .read(normalCalculatePageControllerProvider.notifier)
@@ -82,7 +85,10 @@ class NormalCalculatePage extends ConsumerWidget {
                   label: const Text("10円"),
                   backgroundColor: Colors.grey[350],
                   selectedColor: const Color.fromARGB(255, 104, 245, 172),
-                  selected: fraction == 10,
+                  selected: ref
+                          .watch(normalCalculatePageControllerProvider)
+                          .fractionPrice ==
+                      10,
                   onSelected: (_) {
                     ref
                         .read(normalCalculatePageControllerProvider.notifier)
@@ -93,7 +99,10 @@ class NormalCalculatePage extends ConsumerWidget {
                   label: const Text("100円"),
                   backgroundColor: Colors.grey[350],
                   selectedColor: const Color.fromARGB(255, 104, 245, 172),
-                  selected: fraction == 100,
+                  selected: ref
+                          .watch(normalCalculatePageControllerProvider)
+                          .fractionPrice ==
+                      100,
                   onSelected: (_) {
                     ref
                         .read(normalCalculatePageControllerProvider.notifier)
@@ -104,7 +113,10 @@ class NormalCalculatePage extends ConsumerWidget {
                   label: const Text("1000円"),
                   backgroundColor: Colors.grey[350],
                   selectedColor: const Color.fromARGB(255, 104, 245, 172),
-                  selected: fraction == 1000,
+                  selected: ref
+                          .watch(normalCalculatePageControllerProvider)
+                          .fractionPrice ==
+                      1000,
                   onSelected: (_) {
                     ref
                         .read(normalCalculatePageControllerProvider.notifier)
