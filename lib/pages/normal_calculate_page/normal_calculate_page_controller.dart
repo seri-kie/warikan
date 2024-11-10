@@ -6,77 +6,71 @@ part 'normal_calculate_page_controller.freezed.dart';
 
 enum FractionRound { none, roundUp, roundDown }
 
+@freezed
+class NormalCalculatePageState with _$NormalCalculatePageState {
+  const factory NormalCalculatePageState({
+    required int inputTotal,
+    required int inputPeople,
+    required FractionRound fraction,
+    required double divideResult,
+    required int fractionPrice,
+    required double difference, // differenceフィールドを追加
+  }) = _NormalCalculatePageState;
+}
+
 @riverpod
 class NormalCalculatePageController extends _$NormalCalculatePageController {
   @override
   NormalCalculatePageState build() {
     return const NormalCalculatePageState(
-      inputAmount: -1,
-      inputPeople: -1,
+      inputTotal: 0,
+      inputPeople: 1,
       fraction: FractionRound.none,
+      divideResult: 0.0,
       fractionPrice: 1,
-      calcResult: -1,
+      difference: 0.0, // 初期値を設定
     );
   }
 
-  void setInputAmount(int value) {
-    state = state.copyWith(inputAmount: value);
+  void setInputTotal(int value) {
+    state = state.copyWith(inputTotal: value);
+    divide();
   }
 
   void setInputPeople(int value) {
     state = state.copyWith(inputPeople: value);
+    divide();
   }
 
   void setFraction(FractionRound value) {
     state = state.copyWith(fraction: value);
+    divide();
   }
 
   void setFractionPrice(int value) {
     state = state.copyWith(fractionPrice: value);
+    divide();
   }
 
   void divide() {
-    //　人数と金額の両方が入力されている場合のみ計算を行う
-    if (state.inputAmount != -1 && state.inputPeople != -1) {
+    // 人数と金額の両方が入力されている場合のみ計算を行う
+    if (state.inputTotal != -1 && state.inputPeople != -1) {
       // 割り勘結果
-      double result = state.inputAmount / state.inputPeople;
+      double result = state.inputTotal / state.inputPeople;
       // 端数処理の設定によって計算結果を変える
       if (state.fraction == FractionRound.roundUp) {
         // 端数処理が切り上げの場合、fractionPriceの値で切り上げを行う
-        state =
-            state.copyWith(calcResult: roundUp(result, state.fractionPrice));
+        result =
+            (result / state.fractionPrice).ceilToDouble() * state.fractionPrice;
       } else if (state.fraction == FractionRound.roundDown) {
-        state = state.copyWith(
-          calcResult: roundDown(result, state.fractionPrice),
-        );
-      } else {
-        state = state.copyWith(
-          calcResult: state.inputAmount / state.inputPeople,
-        );
+        result = (result / state.fractionPrice).floorToDouble() *
+            state.fractionPrice;
       }
+      // 過不足の金額を計算
+      double actualTotal = result * state.inputPeople;
+      double difference = actualTotal - state.inputTotal;
+      // 状態を更新
+      state = state.copyWith(divideResult: result, difference: difference);
     }
   }
-
-  double roundUp(double value, int fractionPrice) {
-    // 割り切れる場合はそのままの値を返す
-    if (value % fractionPrice == 0) {
-      return value;
-    }
-    return (value / fractionPrice).ceil() * fractionPrice.toDouble();
-  }
-
-  double roundDown(double value, int fractionPrice) {
-    return (value / fractionPrice).floor() * fractionPrice.toDouble();
-  }
-}
-
-@freezed
-class NormalCalculatePageState with _$NormalCalculatePageState {
-  const factory NormalCalculatePageState({
-    required int inputAmount,
-    required int inputPeople,
-    required FractionRound fraction,
-    required int fractionPrice,
-    required double calcResult,
-  }) = _NormalCalculatePageState;
 }

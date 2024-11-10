@@ -16,11 +16,12 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$NormalCalculatePageState {
-  int get inputAmount => throw _privateConstructorUsedError;
+  int get inputTotal => throw _privateConstructorUsedError;
   int get inputPeople => throw _privateConstructorUsedError;
   FractionRound get fraction => throw _privateConstructorUsedError;
+  double get divideResult => throw _privateConstructorUsedError;
   int get fractionPrice => throw _privateConstructorUsedError;
-  double get calcResult => throw _privateConstructorUsedError;
+  double get difference => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $NormalCalculatePageStateCopyWith<NormalCalculatePageState> get copyWith =>
@@ -34,11 +35,12 @@ abstract class $NormalCalculatePageStateCopyWith<$Res> {
       _$NormalCalculatePageStateCopyWithImpl<$Res, NormalCalculatePageState>;
   @useResult
   $Res call(
-      {int inputAmount,
+      {int inputTotal,
       int inputPeople,
       FractionRound fraction,
+      double divideResult,
       int fractionPrice,
-      double calcResult});
+      double difference});
 }
 
 /// @nodoc
@@ -55,16 +57,17 @@ class _$NormalCalculatePageStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? inputAmount = null,
+    Object? inputTotal = null,
     Object? inputPeople = null,
     Object? fraction = null,
+    Object? divideResult = null,
     Object? fractionPrice = null,
-    Object? calcResult = null,
+    Object? difference = null,
   }) {
     return _then(_value.copyWith(
-      inputAmount: null == inputAmount
-          ? _value.inputAmount
-          : inputAmount // ignore: cast_nullable_to_non_nullable
+      inputTotal: null == inputTotal
+          ? _value.inputTotal
+          : inputTotal // ignore: cast_nullable_to_non_nullable
               as int,
       inputPeople: null == inputPeople
           ? _value.inputPeople
@@ -74,13 +77,17 @@ class _$NormalCalculatePageStateCopyWithImpl<$Res,
           ? _value.fraction
           : fraction // ignore: cast_nullable_to_non_nullable
               as FractionRound,
+      divideResult: null == divideResult
+          ? _value.divideResult
+          : divideResult // ignore: cast_nullable_to_non_nullable
+              as double,
       fractionPrice: null == fractionPrice
           ? _value.fractionPrice
           : fractionPrice // ignore: cast_nullable_to_non_nullable
               as int,
-      calcResult: null == calcResult
-          ? _value.calcResult
-          : calcResult // ignore: cast_nullable_to_non_nullable
+      difference: null == difference
+          ? _value.difference
+          : difference // ignore: cast_nullable_to_non_nullable
               as double,
     ) as $Val);
   }
@@ -96,11 +103,12 @@ abstract class _$$NormalCalculatePageStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int inputAmount,
+      {int inputTotal,
       int inputPeople,
       FractionRound fraction,
+      double divideResult,
       int fractionPrice,
-      double calcResult});
+      double difference});
 }
 
 /// @nodoc
@@ -116,16 +124,17 @@ class __$$NormalCalculatePageStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? inputAmount = null,
+    Object? inputTotal = null,
     Object? inputPeople = null,
     Object? fraction = null,
+    Object? divideResult = null,
     Object? fractionPrice = null,
-    Object? calcResult = null,
+    Object? difference = null,
   }) {
     return _then(_$NormalCalculatePageStateImpl(
-      inputAmount: null == inputAmount
-          ? _value.inputAmount
-          : inputAmount // ignore: cast_nullable_to_non_nullable
+      inputTotal: null == inputTotal
+          ? _value.inputTotal
+          : inputTotal // ignore: cast_nullable_to_non_nullable
               as int,
       inputPeople: null == inputPeople
           ? _value.inputPeople
@@ -135,13 +144,17 @@ class __$$NormalCalculatePageStateImplCopyWithImpl<$Res>
           ? _value.fraction
           : fraction // ignore: cast_nullable_to_non_nullable
               as FractionRound,
+      divideResult: null == divideResult
+          ? _value.divideResult
+          : divideResult // ignore: cast_nullable_to_non_nullable
+              as double,
       fractionPrice: null == fractionPrice
           ? _value.fractionPrice
           : fractionPrice // ignore: cast_nullable_to_non_nullable
               as int,
-      calcResult: null == calcResult
-          ? _value.calcResult
-          : calcResult // ignore: cast_nullable_to_non_nullable
+      difference: null == difference
+          ? _value.difference
+          : difference // ignore: cast_nullable_to_non_nullable
               as double,
     ));
   }
@@ -151,26 +164,29 @@ class __$$NormalCalculatePageStateImplCopyWithImpl<$Res>
 
 class _$NormalCalculatePageStateImpl implements _NormalCalculatePageState {
   const _$NormalCalculatePageStateImpl(
-      {required this.inputAmount,
+      {required this.inputTotal,
       required this.inputPeople,
       required this.fraction,
+      required this.divideResult,
       required this.fractionPrice,
-      required this.calcResult});
+      required this.difference});
 
   @override
-  final int inputAmount;
+  final int inputTotal;
   @override
   final int inputPeople;
   @override
   final FractionRound fraction;
   @override
+  final double divideResult;
+  @override
   final int fractionPrice;
   @override
-  final double calcResult;
+  final double difference;
 
   @override
   String toString() {
-    return 'NormalCalculatePageState(inputAmount: $inputAmount, inputPeople: $inputPeople, fraction: $fraction, fractionPrice: $fractionPrice, calcResult: $calcResult)';
+    return 'NormalCalculatePageState(inputTotal: $inputTotal, inputPeople: $inputPeople, fraction: $fraction, divideResult: $divideResult, fractionPrice: $fractionPrice, difference: $difference)';
   }
 
   @override
@@ -178,21 +194,23 @@ class _$NormalCalculatePageStateImpl implements _NormalCalculatePageState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NormalCalculatePageStateImpl &&
-            (identical(other.inputAmount, inputAmount) ||
-                other.inputAmount == inputAmount) &&
+            (identical(other.inputTotal, inputTotal) ||
+                other.inputTotal == inputTotal) &&
             (identical(other.inputPeople, inputPeople) ||
                 other.inputPeople == inputPeople) &&
             (identical(other.fraction, fraction) ||
                 other.fraction == fraction) &&
+            (identical(other.divideResult, divideResult) ||
+                other.divideResult == divideResult) &&
             (identical(other.fractionPrice, fractionPrice) ||
                 other.fractionPrice == fractionPrice) &&
-            (identical(other.calcResult, calcResult) ||
-                other.calcResult == calcResult));
+            (identical(other.difference, difference) ||
+                other.difference == difference));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, inputAmount, inputPeople,
-      fraction, fractionPrice, calcResult);
+  int get hashCode => Object.hash(runtimeType, inputTotal, inputPeople,
+      fraction, divideResult, fractionPrice, difference);
 
   @JsonKey(ignore: true)
   @override
@@ -204,22 +222,25 @@ class _$NormalCalculatePageStateImpl implements _NormalCalculatePageState {
 
 abstract class _NormalCalculatePageState implements NormalCalculatePageState {
   const factory _NormalCalculatePageState(
-      {required final int inputAmount,
+      {required final int inputTotal,
       required final int inputPeople,
       required final FractionRound fraction,
+      required final double divideResult,
       required final int fractionPrice,
-      required final double calcResult}) = _$NormalCalculatePageStateImpl;
+      required final double difference}) = _$NormalCalculatePageStateImpl;
 
   @override
-  int get inputAmount;
+  int get inputTotal;
   @override
   int get inputPeople;
   @override
   FractionRound get fraction;
   @override
+  double get divideResult;
+  @override
   int get fractionPrice;
   @override
-  double get calcResult;
+  double get difference;
   @override
   @JsonKey(ignore: true)
   _$$NormalCalculatePageStateImplCopyWith<_$NormalCalculatePageStateImpl>

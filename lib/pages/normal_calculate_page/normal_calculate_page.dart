@@ -14,13 +14,10 @@ class NormalCalculatePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final calcResult =
-        ref.watch(normalCalculatePageControllerProvider).calcResult;
+        ref.watch(normalCalculatePageControllerProvider).divideResult;
     final fraction = ref.watch(normalCalculatePageControllerProvider).fraction;
     final difference =
-        ref.watch(normalCalculatePageControllerProvider).inputAmount -
-            calcResult *
-                ref.watch(normalCalculatePageControllerProvider).inputPeople;
-    ;
+        ref.watch(normalCalculatePageControllerProvider).difference;
     return Column(
       children: [
         Row(
@@ -173,17 +170,17 @@ class NormalCalculatePage extends ConsumerWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  AutoSizeText(
-                    difference == 0
-                        ? ''
-                        : difference > 0
-                            ? '不足金額: ${difference.toStringAsFixed(0)}円'
-                            : '余り金額: ${(difference * -1).toStringAsFixed(0)}円',
-                    maxLines: 1,
-                    overflow: TextOverflow.clip,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
+                  difference != 0
+                      ? AutoSizeText(
+                          difference < 0
+                              ? '不足金額: ${(difference * -1).toStringAsFixed(0)}円'
+                              : '余り金額: ${difference.toStringAsFixed(0)}円',
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        )
+                      : const SizedBox.shrink(),
                 ],
               ),
             ))
@@ -202,7 +199,7 @@ class NormalCalculatePage extends ConsumerWidget {
         onFieldSubmitted: (value) {
           ref
               .read(normalCalculatePageControllerProvider.notifier)
-              .setInputAmount(int.parse(value));
+              .setInputTotal(int.parse(value));
 
           ref.read(normalCalculatePageControllerProvider.notifier).divide();
         },
