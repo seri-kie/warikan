@@ -7,7 +7,7 @@ part of 'normal_calculate_page_controller.dart';
 // **************************************************************************
 
 String _$normalCalculatePageControllerHash() =>
-    r'f8ac58af7e7103e0118549e2f4d687b875fca381';
+    r'48c3a7e69b27b0163c7652905d05c442d79bab5d';
 
 /// See also [NormalCalculatePageController].
 @ProviderFor(NormalCalculatePageController)

@@ -15,6 +15,12 @@ class NormalCalculatePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final calcResult =
         ref.watch(normalCalculatePageControllerProvider).calcResult;
+    final fraction = ref.watch(normalCalculatePageControllerProvider).fraction;
+    final difference =
+        ref.watch(normalCalculatePageControllerProvider).inputAmount -
+            calcResult *
+                ref.watch(normalCalculatePageControllerProvider).inputPeople;
+    ;
     return Column(
       children: [
         Row(
@@ -34,6 +40,7 @@ class NormalCalculatePage extends ConsumerWidget {
                   .setFraction(selected.contains(FractionRound.none)
                       ? FractionRound.none
                       : selected.first);
+              ref.read(normalCalculatePageControllerProvider.notifier).divide();
             },
             style: SegmentedButton.styleFrom(
                 backgroundColor: Colors.grey[350],
@@ -79,6 +86,9 @@ class NormalCalculatePage extends ConsumerWidget {
                     ref
                         .read(normalCalculatePageControllerProvider.notifier)
                         .setFractionPrice(1);
+                    ref
+                        .read(normalCalculatePageControllerProvider.notifier)
+                        .divide();
                   },
                 ),
                 ChoiceChip(
@@ -93,6 +103,9 @@ class NormalCalculatePage extends ConsumerWidget {
                     ref
                         .read(normalCalculatePageControllerProvider.notifier)
                         .setFractionPrice(10);
+                    ref
+                        .read(normalCalculatePageControllerProvider.notifier)
+                        .divide();
                   },
                 ),
                 ChoiceChip(
@@ -107,6 +120,9 @@ class NormalCalculatePage extends ConsumerWidget {
                     ref
                         .read(normalCalculatePageControllerProvider.notifier)
                         .setFractionPrice(100);
+                    ref
+                        .read(normalCalculatePageControllerProvider.notifier)
+                        .divide();
                   },
                 ),
                 ChoiceChip(
@@ -121,6 +137,9 @@ class NormalCalculatePage extends ConsumerWidget {
                     ref
                         .read(normalCalculatePageControllerProvider.notifier)
                         .setFractionPrice(1000);
+                    ref
+                        .read(normalCalculatePageControllerProvider.notifier)
+                        .divide();
                   },
                 ),
               ],
@@ -136,16 +155,36 @@ class NormalCalculatePage extends ConsumerWidget {
                     fit: BoxFit.fitWidth)),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: AutoSizeText(
-                calcResult == -1
-                    ? '金額と人数を入力してください'
-                    : (calcResult % 1 == 0 // 整数の場合
-                        ? '1人:${calcResult.toStringAsFixed(0)}円' // 整数として表示
-                        : '1人:${calcResult.toStringAsFixed(3)}円'), // それ以外は小数点以下3桁
-                maxLines: 1,
-                overflow: TextOverflow.clip,
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AutoSizeText(
+                    calcResult == -1
+                        ? '金額と人数を入力してください'
+                        : (calcResult % 1 == 0 // 整数の場合
+                            ? '1人:${calcResult.toStringAsFixed(0)}円' // 整数として表示
+                            : '1人:${calcResult.toStringAsFixed(3)}円'), // それ以外は小数点以下3桁
+                    maxLines: 1,
+                    overflow: TextOverflow.clip,
+
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  AutoSizeText(
+                    difference == 0
+                        ? ''
+                        : difference > 0
+                            ? '不足金額: ${difference.toStringAsFixed(0)}円'
+                            : '余り金額: ${(difference * -1).toStringAsFixed(0)}円',
+                    maxLines: 1,
+                    overflow: TextOverflow.clip,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
             ))
       ],
@@ -164,7 +203,7 @@ class NormalCalculatePage extends ConsumerWidget {
           ref
               .read(normalCalculatePageControllerProvider.notifier)
               .setInputAmount(int.parse(value));
-          debugPrint('inputTotal: ${int.parse(value)}');
+
           ref.read(normalCalculatePageControllerProvider.notifier).divide();
         },
         decoration: const InputDecoration(
@@ -192,8 +231,6 @@ class NormalCalculatePage extends ConsumerWidget {
           ref
               .read(normalCalculatePageControllerProvider.notifier)
               .setInputPeople(int.parse(value));
-          debugPrint(
-              'inputTotal: ${ref.read(normalCalculatePageControllerProvider).inputPeople}');
           ref.read(normalCalculatePageControllerProvider.notifier).divide();
         },
         decoration: const InputDecoration(

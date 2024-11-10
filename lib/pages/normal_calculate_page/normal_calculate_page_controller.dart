@@ -14,7 +14,7 @@ class NormalCalculatePageController extends _$NormalCalculatePageController {
       inputAmount: -1,
       inputPeople: -1,
       fraction: FractionRound.none,
-      fractionPrice: 0,
+      fractionPrice: 1,
       calcResult: -1,
     );
   }
@@ -36,11 +36,37 @@ class NormalCalculatePageController extends _$NormalCalculatePageController {
   }
 
   void divide() {
+    //　人数と金額の両方が入力されている場合のみ計算を行う
     if (state.inputAmount != -1 && state.inputPeople != -1) {
-      state = state.copyWith(
-        calcResult: state.inputAmount / state.inputPeople,
-      );
+      // 割り勘結果
+      double result = state.inputAmount / state.inputPeople;
+      // 端数処理の設定によって計算結果を変える
+      if (state.fraction == FractionRound.roundUp) {
+        // 端数処理が切り上げの場合、fractionPriceの値で切り上げを行う
+        state =
+            state.copyWith(calcResult: roundUp(result, state.fractionPrice));
+      } else if (state.fraction == FractionRound.roundDown) {
+        state = state.copyWith(
+          calcResult: roundDown(result, state.fractionPrice),
+        );
+      } else {
+        state = state.copyWith(
+          calcResult: state.inputAmount / state.inputPeople,
+        );
+      }
     }
+  }
+
+  double roundUp(double value, int fractionPrice) {
+    // 割り切れる場合はそのままの値を返す
+    if (value % fractionPrice == 0) {
+      return value;
+    }
+    return (value / fractionPrice).ceil() * fractionPrice.toDouble();
+  }
+
+  double roundDown(double value, int fractionPrice) {
+    return (value / fractionPrice).floor() * fractionPrice.toDouble();
   }
 }
 
