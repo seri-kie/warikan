@@ -24,7 +24,7 @@ class NormalCalculatePageController extends _$NormalCalculatePageController {
   NormalCalculatePageState build() {
     return const NormalCalculatePageState(
       inputTotal: 0,
-      inputPeople: 1,
+      inputPeople: -1,
       fraction: FractionRound.none,
       divideResult: 0.0,
       fractionPrice: 1,

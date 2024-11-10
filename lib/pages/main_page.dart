@@ -20,6 +20,7 @@ class _MyHomePageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: pages[_selectedIndex],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,

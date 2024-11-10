@@ -1,9 +1,8 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:warikan/gen/assets.gen.dart';
 import 'package:warikan/pages/normal_calculate_page/normal_calculate_page_controller.dart';
+import 'package:warikan/pages/normal_calculate_page/widgets/result_container.dart';
 
 class NormalCalculatePage extends ConsumerWidget {
   final int fraction = 1;
@@ -13,11 +12,6 @@ class NormalCalculatePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final calcResult =
-        ref.watch(normalCalculatePageControllerProvider).divideResult;
-    final fraction = ref.watch(normalCalculatePageControllerProvider).fraction;
-    final difference =
-        ref.watch(normalCalculatePageControllerProvider).difference;
     return Column(
       children: [
         Row(
@@ -66,124 +60,11 @@ class NormalCalculatePage extends ConsumerWidget {
         ),
         if (ref.watch(normalCalculatePageControllerProvider).fraction !=
             FractionRound.none)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ChoiceChip(
-                  label: const Text("1円"),
-                  backgroundColor: Colors.grey[350],
-                  selectedColor: const Color.fromARGB(255, 104, 245, 172),
-                  selected: ref
-                          .watch(normalCalculatePageControllerProvider)
-                          .fractionPrice ==
-                      1,
-                  onSelected: (_) {
-                    ref
-                        .read(normalCalculatePageControllerProvider.notifier)
-                        .setFractionPrice(1);
-                    ref
-                        .read(normalCalculatePageControllerProvider.notifier)
-                        .divide();
-                  },
-                ),
-                ChoiceChip(
-                  label: const Text("10円"),
-                  backgroundColor: Colors.grey[350],
-                  selectedColor: const Color.fromARGB(255, 104, 245, 172),
-                  selected: ref
-                          .watch(normalCalculatePageControllerProvider)
-                          .fractionPrice ==
-                      10,
-                  onSelected: (_) {
-                    ref
-                        .read(normalCalculatePageControllerProvider.notifier)
-                        .setFractionPrice(10);
-                    ref
-                        .read(normalCalculatePageControllerProvider.notifier)
-                        .divide();
-                  },
-                ),
-                ChoiceChip(
-                  label: const Text("100円"),
-                  backgroundColor: Colors.grey[350],
-                  selectedColor: const Color.fromARGB(255, 104, 245, 172),
-                  selected: ref
-                          .watch(normalCalculatePageControllerProvider)
-                          .fractionPrice ==
-                      100,
-                  onSelected: (_) {
-                    ref
-                        .read(normalCalculatePageControllerProvider.notifier)
-                        .setFractionPrice(100);
-                    ref
-                        .read(normalCalculatePageControllerProvider.notifier)
-                        .divide();
-                  },
-                ),
-                ChoiceChip(
-                  label: const Text("1000円"),
-                  backgroundColor: Colors.grey[350],
-                  selectedColor: const Color.fromARGB(255, 104, 245, 172),
-                  selected: ref
-                          .watch(normalCalculatePageControllerProvider)
-                          .fractionPrice ==
-                      1000,
-                  onSelected: (_) {
-                    ref
-                        .read(normalCalculatePageControllerProvider.notifier)
-                        .setFractionPrice(1000);
-                    ref
-                        .read(normalCalculatePageControllerProvider.notifier)
-                        .divide();
-                  },
-                ),
-              ],
-            ),
-          ),
-        Container(
-            alignment: Alignment.center,
-            width: 250,
-            height: 200,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage(Assets.images.bgWarikan.path),
-                    fit: BoxFit.fitWidth)),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AutoSizeText(
-                    calcResult == -1
-                        ? '金額と人数を入力してください'
-                        : (calcResult % 1 == 0 // 整数の場合
-                            ? '1人:${calcResult.toStringAsFixed(0)}円' // 整数として表示
-                            : '1人:${calcResult.toStringAsFixed(3)}円'), // それ以外は小数点以下3桁
-                    maxLines: 1,
-                    overflow: TextOverflow.clip,
-
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  difference != 0
-                      ? AutoSizeText(
-                          difference < 0
-                              ? '不足金額: ${(difference * -1).toStringAsFixed(0)}円'
-                              : '余り金額: ${difference.toStringAsFixed(0)}円',
-                          maxLines: 1,
-                          overflow: TextOverflow.clip,
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        )
-                      : const SizedBox.shrink(),
-                ],
-              ),
-            ))
+          _fractionChoiceChips(ref),
+        const SizedBox(
+          height: 10,
+        ),
+        const ResultContainer()
       ],
     );
   }
@@ -200,8 +81,10 @@ class NormalCalculatePage extends ConsumerWidget {
           ref
               .read(normalCalculatePageControllerProvider.notifier)
               .setInputTotal(int.parse(value));
-
-          ref.read(normalCalculatePageControllerProvider.notifier).divide();
+          if (ref.read(normalCalculatePageControllerProvider).inputPeople !=
+              -1) {
+            ref.read(normalCalculatePageControllerProvider.notifier).divide();
+          }
         },
         decoration: const InputDecoration(
             border: OutlineInputBorder(
@@ -240,6 +123,77 @@ class NormalCalculatePage extends ConsumerWidget {
               '人',
               style: TextStyle(color: Colors.black),
             )),
+      ),
+    );
+  }
+
+  Widget _fractionChoiceChips(WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ChoiceChip(
+            label: const Text("1円"),
+            backgroundColor: Colors.grey[350],
+            selectedColor: const Color.fromARGB(255, 104, 245, 172),
+            selected: ref
+                    .watch(normalCalculatePageControllerProvider)
+                    .fractionPrice ==
+                1,
+            onSelected: (_) {
+              ref
+                  .read(normalCalculatePageControllerProvider.notifier)
+                  .setFractionPrice(1);
+              ref.read(normalCalculatePageControllerProvider.notifier).divide();
+            },
+          ),
+          ChoiceChip(
+            label: const Text("10円"),
+            backgroundColor: Colors.grey[350],
+            selectedColor: const Color.fromARGB(255, 104, 245, 172),
+            selected: ref
+                    .watch(normalCalculatePageControllerProvider)
+                    .fractionPrice ==
+                10,
+            onSelected: (_) {
+              ref
+                  .read(normalCalculatePageControllerProvider.notifier)
+                  .setFractionPrice(10);
+              ref.read(normalCalculatePageControllerProvider.notifier).divide();
+            },
+          ),
+          ChoiceChip(
+            label: const Text("100円"),
+            backgroundColor: Colors.grey[350],
+            selectedColor: const Color.fromARGB(255, 104, 245, 172),
+            selected: ref
+                    .watch(normalCalculatePageControllerProvider)
+                    .fractionPrice ==
+                100,
+            onSelected: (_) {
+              ref
+                  .read(normalCalculatePageControllerProvider.notifier)
+                  .setFractionPrice(100);
+              ref.read(normalCalculatePageControllerProvider.notifier).divide();
+            },
+          ),
+          ChoiceChip(
+            label: const Text("1000円"),
+            backgroundColor: Colors.grey[350],
+            selectedColor: const Color.fromARGB(255, 104, 245, 172),
+            selected: ref
+                    .watch(normalCalculatePageControllerProvider)
+                    .fractionPrice ==
+                1000,
+            onSelected: (_) {
+              ref
+                  .read(normalCalculatePageControllerProvider.notifier)
+                  .setFractionPrice(1000);
+              ref.read(normalCalculatePageControllerProvider.notifier).divide();
+            },
+          ),
+        ],
       ),
     );
   }

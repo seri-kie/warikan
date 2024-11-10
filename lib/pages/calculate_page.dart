@@ -10,6 +10,7 @@ class CalculatePage extends StatelessWidget {
         initialIndex: 0,
         length: 2,
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             title: const TabBar(
               tabs: [
