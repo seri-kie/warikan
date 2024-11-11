@@ -23,6 +23,7 @@ class _MyHomePageState extends State<MainPage> {
       resizeToAvoidBottomInset: false,
       body: pages[_selectedIndex],
       bottomNavigationBar: NavigationBar(
+        height: 55,
         selectedIndex: _selectedIndex,
         onDestinationSelected: (value) {
           setState(() {
@@ -32,14 +33,14 @@ class _MyHomePageState extends State<MainPage> {
         destinations: const [
           NavigationDestination(
               icon: Icon(
-                size: 35,
+                size: 30,
                 Icons.calculate,
               ),
               label: '割り勘'),
           NavigationDestination(
-              icon: Icon(size: 35, Icons.event), label: 'イベント'),
+              icon: Icon(size: 30, Icons.event), label: 'イベント'),
           NavigationDestination(
-              icon: Icon(size: 35, Icons.settings), label: '設定'),
+              icon: Icon(size: 30, Icons.settings), label: '設定'),
         ],
       ),
     );

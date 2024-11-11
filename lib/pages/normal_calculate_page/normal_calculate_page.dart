@@ -78,6 +78,9 @@ class NormalCalculatePage extends ConsumerWidget {
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         textInputAction: TextInputAction.next,
         onFieldSubmitted: (value) {
+          if (value.isEmpty) {
+            return;
+          }
           ref
               .read(normalCalculatePageControllerProvider.notifier)
               .setInputTotal(int.parse(value));
@@ -108,6 +111,9 @@ class NormalCalculatePage extends ConsumerWidget {
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         onFieldSubmitted: (value) {
+          if (value.isEmpty) {
+            return;
+          }
           ref
               .read(normalCalculatePageControllerProvider.notifier)
               .setInputPeople(int.parse(value));
