@@ -1,8 +1,16 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:warikan/models/keisha_group.dart';
 
 part 'keisha_calculate_page_controller.g.dart';
 part 'keisha_calculate_page_controller.freezed.dart';
+
+enum CalcSlope {
+  fit,
+  discount,
+  premium,
+//  キリよく割り勘、切り上げ割り勘、値引き割り勘
+}
 
 @freezed
 class KeishaCalculatePageState with _$KeishaCalculatePageState {
@@ -10,6 +18,7 @@ class KeishaCalculatePageState with _$KeishaCalculatePageState {
     required int inputTotal,
     required int inputPeople,
     required double divideResult,
+    required List<KeishaGroup> keishaGroups,
   }) = _KeishaCalculatePageState;
 }
 
@@ -21,6 +30,7 @@ class KeishaCalculatePageController extends _$KeishaCalculatePageController {
       inputTotal: 0,
       inputPeople: -1,
       divideResult: 0.0,
+      keishaGroups: [],
     );
   }
 
@@ -45,5 +55,11 @@ class KeishaCalculatePageController extends _$KeishaCalculatePageController {
         divideResult: result,
       );
     }
+  }
+
+  void addGroup(KeishaGroup group) {
+    state = state.copyWith(
+      keishaGroups: [...state.keishaGroups, group],
+    );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:warikan/pages/keisha_calculate_page/keisha_calculate_page_controller.dart';
 import 'package:warikan/pages/keisha_calculate_page/widgets/result_container_keisha.dart';
+import 'package:warikan/pages/new_group_page/new_group_page.dart';
 
 class KeishaCalculatePage extends ConsumerWidget {
   const KeishaCalculatePage({super.key});
@@ -31,7 +32,10 @@ class KeishaCalculatePage extends ConsumerWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => const NewGroupPage()));
+        },
         label: const Text(
           'グループを追加',
           style: TextStyle(fontWeight: FontWeight.bold),

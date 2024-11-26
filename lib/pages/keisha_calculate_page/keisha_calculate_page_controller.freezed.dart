@@ -19,6 +19,7 @@ mixin _$KeishaCalculatePageState {
   int get inputTotal => throw _privateConstructorUsedError;
   int get inputPeople => throw _privateConstructorUsedError;
   double get divideResult => throw _privateConstructorUsedError;
+  List<KeishaGroup> get keishaGroups => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $KeishaCalculatePageStateCopyWith<KeishaCalculatePageState> get copyWith =>
@@ -31,7 +32,11 @@ abstract class $KeishaCalculatePageStateCopyWith<$Res> {
           $Res Function(KeishaCalculatePageState) then) =
       _$KeishaCalculatePageStateCopyWithImpl<$Res, KeishaCalculatePageState>;
   @useResult
-  $Res call({int inputTotal, int inputPeople, double divideResult});
+  $Res call(
+      {int inputTotal,
+      int inputPeople,
+      double divideResult,
+      List<KeishaGroup> keishaGroups});
 }
 
 /// @nodoc
@@ -51,6 +56,7 @@ class _$KeishaCalculatePageStateCopyWithImpl<$Res,
     Object? inputTotal = null,
     Object? inputPeople = null,
     Object? divideResult = null,
+    Object? keishaGroups = null,
   }) {
     return _then(_value.copyWith(
       inputTotal: null == inputTotal
@@ -65,6 +71,10 @@ class _$KeishaCalculatePageStateCopyWithImpl<$Res,
           ? _value.divideResult
           : divideResult // ignore: cast_nullable_to_non_nullable
               as double,
+      keishaGroups: null == keishaGroups
+          ? _value.keishaGroups
+          : keishaGroups // ignore: cast_nullable_to_non_nullable
+              as List<KeishaGroup>,
     ) as $Val);
   }
 }
@@ -78,7 +88,11 @@ abstract class _$$KeishaCalculatePageStateImplCopyWith<$Res>
       __$$KeishaCalculatePageStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int inputTotal, int inputPeople, double divideResult});
+  $Res call(
+      {int inputTotal,
+      int inputPeople,
+      double divideResult,
+      List<KeishaGroup> keishaGroups});
 }
 
 /// @nodoc
@@ -97,6 +111,7 @@ class __$$KeishaCalculatePageStateImplCopyWithImpl<$Res>
     Object? inputTotal = null,
     Object? inputPeople = null,
     Object? divideResult = null,
+    Object? keishaGroups = null,
   }) {
     return _then(_$KeishaCalculatePageStateImpl(
       inputTotal: null == inputTotal
@@ -111,6 +126,10 @@ class __$$KeishaCalculatePageStateImplCopyWithImpl<$Res>
           ? _value.divideResult
           : divideResult // ignore: cast_nullable_to_non_nullable
               as double,
+      keishaGroups: null == keishaGroups
+          ? _value._keishaGroups
+          : keishaGroups // ignore: cast_nullable_to_non_nullable
+              as List<KeishaGroup>,
     ));
   }
 }
@@ -121,7 +140,9 @@ class _$KeishaCalculatePageStateImpl implements _KeishaCalculatePageState {
   const _$KeishaCalculatePageStateImpl(
       {required this.inputTotal,
       required this.inputPeople,
-      required this.divideResult});
+      required this.divideResult,
+      required final List<KeishaGroup> keishaGroups})
+      : _keishaGroups = keishaGroups;
 
   @override
   final int inputTotal;
@@ -129,10 +150,17 @@ class _$KeishaCalculatePageStateImpl implements _KeishaCalculatePageState {
   final int inputPeople;
   @override
   final double divideResult;
+  final List<KeishaGroup> _keishaGroups;
+  @override
+  List<KeishaGroup> get keishaGroups {
+    if (_keishaGroups is EqualUnmodifiableListView) return _keishaGroups;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_keishaGroups);
+  }
 
   @override
   String toString() {
-    return 'KeishaCalculatePageState(inputTotal: $inputTotal, inputPeople: $inputPeople, divideResult: $divideResult)';
+    return 'KeishaCalculatePageState(inputTotal: $inputTotal, inputPeople: $inputPeople, divideResult: $divideResult, keishaGroups: $keishaGroups)';
   }
 
   @override
@@ -145,12 +173,14 @@ class _$KeishaCalculatePageStateImpl implements _KeishaCalculatePageState {
             (identical(other.inputPeople, inputPeople) ||
                 other.inputPeople == inputPeople) &&
             (identical(other.divideResult, divideResult) ||
-                other.divideResult == divideResult));
+                other.divideResult == divideResult) &&
+            const DeepCollectionEquality()
+                .equals(other._keishaGroups, _keishaGroups));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, inputTotal, inputPeople, divideResult);
+  int get hashCode => Object.hash(runtimeType, inputTotal, inputPeople,
+      divideResult, const DeepCollectionEquality().hash(_keishaGroups));
 
   @JsonKey(ignore: true)
   @override
@@ -162,9 +192,11 @@ class _$KeishaCalculatePageStateImpl implements _KeishaCalculatePageState {
 
 abstract class _KeishaCalculatePageState implements KeishaCalculatePageState {
   const factory _KeishaCalculatePageState(
-      {required final int inputTotal,
-      required final int inputPeople,
-      required final double divideResult}) = _$KeishaCalculatePageStateImpl;
+          {required final int inputTotal,
+          required final int inputPeople,
+          required final double divideResult,
+          required final List<KeishaGroup> keishaGroups}) =
+      _$KeishaCalculatePageStateImpl;
 
   @override
   int get inputTotal;
@@ -172,6 +204,8 @@ abstract class _KeishaCalculatePageState implements KeishaCalculatePageState {
   int get inputPeople;
   @override
   double get divideResult;
+  @override
+  List<KeishaGroup> get keishaGroups;
   @override
   @JsonKey(ignore: true)
   _$$KeishaCalculatePageStateImplCopyWith<_$KeishaCalculatePageStateImpl>
