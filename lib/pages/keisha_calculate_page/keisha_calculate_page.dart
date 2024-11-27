@@ -10,6 +10,9 @@ class KeishaCalculatePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final keishaGroups =
+        ref.watch(keishaCalculatePageControllerProvider).keishaGroups;
+
     return Scaffold(
       body: Column(
         children: [
@@ -19,8 +22,35 @@ class KeishaCalculatePage extends ConsumerWidget {
               Expanded(child: _inputTotalPeople(context, ref)),
             ],
           ),
-          const Text(
-            'グループ',
+          Column(
+            children: [
+              if (keishaGroups.isEmpty) ...[
+                const Center(
+                  child: Text('グループがありません'),
+                ),
+              ] else ...[
+                const Text('傾斜グループ一覧'),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: keishaGroups.length,
+                  itemBuilder: (context, index) {
+                    final group = keishaGroups[index];
+                    return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('${group.groupName}・'),
+                          Text('${group.totalPeople}名→'),
+                          Text('${group.totalAmount}円'),
+                          if (group.calcSlope == CalcSlope.discount) ...[
+                            const Text('引き'),
+                          ] else if (group.calcSlope == CalcSlope.premium) ...[
+                            const Text('増し'),
+                          ]
+                        ]);
+                  },
+                ),
+              ]
+            ],
           ),
           const SizedBox(
             height: 10,
@@ -33,8 +63,8 @@ class KeishaCalculatePage extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const NewGroupPage()));
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const NewGroupPage()));
         },
         label: const Text(
           'グループを追加',
@@ -81,8 +111,7 @@ class KeishaCalculatePage extends ConsumerWidget {
 
   Widget _inputTotalPeople(BuildContext context, WidgetRef ref) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10),
-      width: MediaQuery.of(context).size.width * 0.55,
+      margin: const EdgeInsets.only(right: 15),
       child: TextFormField(
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],

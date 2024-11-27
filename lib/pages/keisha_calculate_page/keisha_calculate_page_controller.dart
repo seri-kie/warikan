@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:warikan/models/keisha_group.dart';
@@ -60,6 +61,12 @@ class KeishaCalculatePageController extends _$KeishaCalculatePageController {
   void addGroup(KeishaGroup group) {
     state = state.copyWith(
       keishaGroups: [...state.keishaGroups, group],
+    );
+  }
+
+  void removeGroup(KeishaGroup group) {
+    state = state.copyWith(
+      keishaGroups: state.keishaGroups.where((g) => g != group).toList(),
     );
   }
 }

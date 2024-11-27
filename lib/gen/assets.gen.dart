@@ -16,8 +16,12 @@ class $AssetsImagesGen {
   AssetGenImage get bgWarikan =>
       const AssetGenImage('assets/images/bg_warikan.png');
 
+  /// File path: assets/images/group_add_button.png
+  AssetGenImage get groupAddButton =>
+      const AssetGenImage('assets/images/group_add_button.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [bgWarikan];
+  List<AssetGenImage> get values => [bgWarikan, groupAddButton];
 }
 
 class Assets {
