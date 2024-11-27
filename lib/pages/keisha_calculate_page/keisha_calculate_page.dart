@@ -30,6 +30,9 @@ class KeishaCalculatePage extends ConsumerWidget {
                 ),
               ] else ...[
                 const Text('傾斜グループ一覧'),
+                const SizedBox(
+                  height: 5,
+                ),
                 ListView.builder(
                   shrinkWrap: true,
                   itemCount: keishaGroups.length,
@@ -38,13 +41,33 @@ class KeishaCalculatePage extends ConsumerWidget {
                     return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('${group.groupName}・'),
-                          Text('${group.totalPeople}名→'),
-                          Text('${group.totalAmount}円'),
+                          Text(
+                            '${group.groupName}・',
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            '${group.totalPeople}名→',
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            '${group.totalAmount}円',
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
                           if (group.calcSlope == CalcSlope.discount) ...[
-                            const Text('引き'),
+                            const Text(
+                              '引き',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
                           ] else if (group.calcSlope == CalcSlope.premium) ...[
-                            const Text('増し'),
+                            const Text(
+                              '増し',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
                           ]
                         ]);
                   },

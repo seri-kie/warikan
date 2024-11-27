@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0x00196b52)),
         useMaterial3: true,
+        fontFamily: 'Noto Sans JP',
       ),
       home: const MainPage(),
     );
