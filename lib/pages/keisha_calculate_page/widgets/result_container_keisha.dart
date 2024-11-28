@@ -61,7 +61,7 @@ class ResultContainerKeisha extends ConsumerWidget {
                         ),
                       ] else if (group.calcSlope == CalcSlope.premium) ...[
                         AutoSizeText(
-                          '${group.totalAmount + group.totalAmount}円',
+                          '${calcResult + group.totalAmount}円',
                           maxLines: 1,
                           overflow: TextOverflow.clip,
                           style: const TextStyle(

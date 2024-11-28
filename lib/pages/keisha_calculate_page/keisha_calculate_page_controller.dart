@@ -57,7 +57,7 @@ class KeishaCalculatePageController extends _$KeishaCalculatePageController {
         remainingAmount: state.inputTotal,
       );
       fitCalc();
-      discountCalc();
+      discountAndPremiumCalc();
     }
   }
 
@@ -88,19 +88,26 @@ class KeishaCalculatePageController extends _$KeishaCalculatePageController {
     );
   }
 
-  void discountCalc() {
+// 割り引き、割り増しの計算処理
+  void discountAndPremiumCalc() {
     // 割引グループを取得
     final discountGroups = state.keishaGroups
         .where((group) => group.calcSlope == CalcSlope.discount);
-
+    // 割引グループを取得
+    final premiumGroups = state.keishaGroups
+        .where((group) => group.calcSlope == CalcSlope.premium);
     // 現在の残額と残り人数を取得
     int remainingAmount = state.remainingAmount;
 
     // 割引対象者の総支払額減少分を計算
     for (final group in discountGroups) {
       final discountTotal = group.totalAmount * group.totalPeople;
-      // グループごとに割引適用
       remainingAmount += discountTotal;
+    }
+    // 割増対象者の総支払額増加分を計算
+    for (final group in premiumGroups) {
+      final premiumTotal = group.totalAmount * group.totalPeople;
+      remainingAmount -= premiumTotal;
     }
     final remainPerPerson = remainingAmount / state.inputPeople;
     // 状態を更新
