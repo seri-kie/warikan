@@ -10,7 +10,8 @@ class ResultContainerKeisha extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(keishaCalculatePageControllerProvider);
-    final calcResult = state.divideResult;
+    final calcResult = state.divideResultRemain;
+    final keishaGroups = state.keishaGroups;
 
     return Container(
       alignment: Alignment.center,
@@ -27,6 +28,49 @@ class ResultContainerKeisha extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: keishaGroups.length,
+              itemBuilder: (context, index) {
+                final group = keishaGroups[index];
+                return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AutoSizeText(
+                        '${group.groupName}:',
+                        maxLines: 1,
+                        overflow: TextOverflow.clip,
+                        style: const TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      if (group.calcSlope == CalcSlope.fit) ...[
+                        AutoSizeText(
+                          '${group.totalAmount}円',
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          style: const TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                      ] else if (group.calcSlope == CalcSlope.discount) ...[
+                        AutoSizeText(
+                          '${calcResult - group.totalAmount}円',
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          style: const TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                      ] else if (group.calcSlope == CalcSlope.premium) ...[
+                        AutoSizeText(
+                          '${group.totalAmount + group.totalAmount}円',
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          style: const TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                      ]
+                    ]);
+              },
+            ),
             AutoSizeText(
               calcResult == 0
                   ? '金額と人数を入力してください'

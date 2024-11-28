@@ -34,6 +34,15 @@ class _NewGroupPageState extends State<NewGroupPage> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             backgroundColor: const Color(0xFF198D34),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+                ref
+                    .read(keishaCalculatePageControllerProvider.notifier)
+                    .divide();
+              },
+            ),
           ),
           body: Column(
             children: [
