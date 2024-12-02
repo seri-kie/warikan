@@ -15,10 +15,12 @@ class NewGroupPage extends StatefulWidget {
 class _NewGroupPageState extends State<NewGroupPage> {
   Set<CalcSlope> selected = {CalcSlope.fit};
   String groupName = '';
-  int totalPeople = 0;
-  int amount = 0;
+  int totalPeople = -1;
+  int amount = -1;
+  bool hasGroupName = true; // グループ名が入力されているかどうか
   bool canAddPeople = true; // 人数が合計人数を超えているかどうか
-  bool existPeople = true; // 人数が入力されているかどうか
+  bool hasPeople = true; // 人数が入力されているかどうか
+  bool hasAmount = true; // 金額が入力されているかどうか
 
   final TextEditingController groupNameController = TextEditingController();
   final TextEditingController totalPeopleController = TextEditingController();
@@ -141,14 +143,16 @@ class _NewGroupPageState extends State<NewGroupPage> {
                   borderRadius: BorderRadius.circular(20.0), // リップルを角丸に
                 ),
                 onTap: () {
+                  // 一つでも入力ミスがあればreturn
+                  bool inputError = false;
                   // 人数のチェック
                   if (totalPeople <= 0) {
                     setState(() {
-                      existPeople = false;
+                      hasPeople = false;
                     });
-                    return;
+                    inputError = true;
                   } else {
-                    existPeople = true;
+                    hasPeople = true;
                   }
                   if (!ref
                       .read(keishaCalculatePageControllerProvider.notifier)
@@ -156,12 +160,29 @@ class _NewGroupPageState extends State<NewGroupPage> {
                     setState(() {
                       canAddPeople = false;
                     });
-                    return;
+                    inputError = true;
                   } else {
                     canAddPeople = true;
                   }
-
-                  if (groupName.isEmpty || totalPeople == 0 || amount == 0) {
+                  // グループ名のチェック
+                  if (groupName.isEmpty) {
+                    setState(() {
+                      hasGroupName = false;
+                    });
+                    inputError = true;
+                  } else {
+                    hasGroupName = true;
+                  }
+                  // 金額のチェック
+                  if (amount < 0) {
+                    setState(() {
+                      hasAmount = false;
+                    });
+                    inputError = true;
+                  } else {
+                    hasAmount = true;
+                  }
+                  if (inputError) {
                     return;
                   }
                   final keishaGroup = KeishaGroup(
@@ -201,11 +222,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.next,
         onChanged: (value) {
-          if (value.isEmpty) {
-            return;
-          } else {
-            groupName = value;
-          }
+          groupName = value;
         },
         decoration: const InputDecoration(
           hintText: '1年生',
@@ -215,6 +232,13 @@ class _NewGroupPageState extends State<NewGroupPage> {
           prefixIcon: Icon(Icons.abc),
           labelText: 'グループ名',
         ),
+        autovalidateMode: AutovalidateMode.always,
+        validator: (value) {
+          if (!hasGroupName) {
+            return 'グループ名を入力してください';
+          }
+          return null;
+        },
       ),
     );
   }
@@ -246,9 +270,9 @@ class _NewGroupPageState extends State<NewGroupPage> {
               '人',
               style: TextStyle(color: Colors.black),
             )),
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        autovalidateMode: AutovalidateMode.always,
         validator: (value) {
-          if (!existPeople) {
+          if (!hasPeople) {
             return '人数を入力';
           }
           if (!canAddPeople) {
@@ -270,6 +294,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
         textInputAction: TextInputAction.next,
         onChanged: (value) {
           if (value.isEmpty) {
+            amount = -1;
             return;
           }
           amount = int.parse(value);
@@ -285,6 +310,13 @@ class _NewGroupPageState extends State<NewGroupPage> {
               '円',
               style: TextStyle(color: Colors.black),
             )),
+        autovalidateMode: AutovalidateMode.always,
+        validator: (value) {
+          if (!hasAmount) {
+            return '金額を入力してください';
+          }
+          return null;
+        },
       ),
     );
   }
