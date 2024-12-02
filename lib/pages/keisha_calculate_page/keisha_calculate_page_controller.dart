@@ -19,6 +19,7 @@ class KeishaCalculatePageState with _$KeishaCalculatePageState {
     required double divideResultTotal,
     required double divideResultRemain,
     required int remainingAmount,
+    required int groupPeople,
     required List<KeishaGroup> keishaGroups,
   }) = _KeishaCalculatePageState;
 }
@@ -33,6 +34,7 @@ class KeishaCalculatePageController extends _$KeishaCalculatePageController {
       divideResultTotal: 0.0,
       divideResultRemain: 0.0,
       remainingAmount: 0,
+      groupPeople: 0,
       keishaGroups: [],
     );
   }
@@ -113,7 +115,8 @@ class KeishaCalculatePageController extends _$KeishaCalculatePageController {
     // 状態を更新
     state = state.copyWith(
       divideResultRemain: remainPerPerson,
-      remainingAmount: remainingAmount, // 更新された残額を保存
+      remainingAmount: remainingAmount,
+      // 更新された残額を保存
     );
   }
 
@@ -122,9 +125,15 @@ class KeishaCalculatePageController extends _$KeishaCalculatePageController {
     return state.keishaGroups.any((group) => group.calcSlope == CalcSlope.fit);
   }
 
+  // グループの人数判定
+  bool canAddGroup(int totalPeople) {
+    return state.inputPeople > state.groupPeople + totalPeople;
+  }
+
   void addGroup(KeishaGroup group) {
     state = state.copyWith(
       keishaGroups: [...state.keishaGroups, group],
+      groupPeople: state.groupPeople + group.totalPeople,
     );
   }
 

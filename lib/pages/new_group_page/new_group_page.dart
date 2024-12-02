@@ -17,6 +17,8 @@ class _NewGroupPageState extends State<NewGroupPage> {
   String groupName = '';
   int totalPeople = 0;
   int amount = 0;
+  bool canAddPeople = true; // 人数が合計人数を超えているかどうか
+  bool existPeople = true; // 人数が入力されているかどうか
 
   final TextEditingController groupNameController = TextEditingController();
   final TextEditingController totalPeopleController = TextEditingController();
@@ -95,7 +97,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                       ),
                       Row(
                         children: [
-                          _inputTotalPeople(),
+                          _inputTotalPeople(ref),
                           const SizedBox(
                             width: 10,
                           ),
@@ -133,12 +135,32 @@ class _NewGroupPageState extends State<NewGroupPage> {
               const SizedBox(
                 height: 25,
               ),
-              //　イベント作成ボタンを押したらKeishaGroupのインタンスを作成して追加する
+              //　グループ追加ボタンを押したらKeishaGroupのインタンスを作成して追加する
               InkWell(
                 customBorder: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0), // リップルを角丸に
                 ),
                 onTap: () {
+                  // 人数のチェック
+                  if (totalPeople <= 0) {
+                    setState(() {
+                      existPeople = false;
+                    });
+                    return;
+                  } else {
+                    existPeople = true;
+                  }
+                  if (!ref
+                      .read(keishaCalculatePageControllerProvider.notifier)
+                      .canAddGroup(totalPeople)) {
+                    setState(() {
+                      canAddPeople = false;
+                    });
+                    return;
+                  } else {
+                    canAddPeople = true;
+                  }
+
                   if (groupName.isEmpty || totalPeople == 0 || amount == 0) {
                     return;
                   }
@@ -197,9 +219,9 @@ class _NewGroupPageState extends State<NewGroupPage> {
     );
   }
 
-  Widget _inputTotalPeople() {
+  Widget _inputTotalPeople(WidgetRef ref) {
     return SizedBox(
-      width: 120,
+      width: 130,
       child: TextFormField(
         controller: totalPeopleController,
         keyboardType: TextInputType.number,
@@ -207,6 +229,8 @@ class _NewGroupPageState extends State<NewGroupPage> {
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         onChanged: (value) {
           if (value.isEmpty) {
+            // 何も入力されていない判定
+            totalPeople = -1;
             return;
           }
           totalPeople = int.parse(value);
@@ -222,6 +246,16 @@ class _NewGroupPageState extends State<NewGroupPage> {
               '人',
               style: TextStyle(color: Colors.black),
             )),
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator: (value) {
+          if (!existPeople) {
+            return '人数を入力';
+          }
+          if (!canAddPeople) {
+            return '合計人数を超えています';
+          }
+          return null;
+        },
       ),
     );
   }
