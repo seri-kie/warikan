@@ -16,8 +16,7 @@ class KeishaCalculatePageState with _$KeishaCalculatePageState {
   const factory KeishaCalculatePageState({
     required int inputTotal,
     required int inputPeople,
-    required double divideResultTotal,
-    required double divideResultRemain,
+    required double divideResult,
     required int remainingAmount,
     required int groupPeople,
     required List<KeishaGroup> keishaGroups,
@@ -31,8 +30,7 @@ class KeishaCalculatePageController extends _$KeishaCalculatePageController {
     return const KeishaCalculatePageState(
       inputTotal: 0,
       inputPeople: -1,
-      divideResultTotal: 0.0,
-      divideResultRemain: 0.0,
+      divideResult: 0.0,
       remainingAmount: 0,
       groupPeople: 0,
       keishaGroups: [],
@@ -54,12 +52,17 @@ class KeishaCalculatePageController extends _$KeishaCalculatePageController {
     if (state.inputTotal > 0 && state.inputPeople > 0) {
       double result = state.inputTotal / state.inputPeople;
       state = state.copyWith(
-        divideResultTotal: result,
-        divideResultRemain: result,
+        divideResult: result,
         remainingAmount: state.inputTotal,
       );
-      fitCalc();
-      discountAndPremiumCalc();
+      // キリよく！グループが存在する場合は、キリよく！グループの計算処理を行う
+      if (isFitGroupExist()) {
+        fitCalc();
+      }
+      // 割引、割増グループが存在する場合は、割引、割増グループの計算処理を行う
+      if (isDiscountOrPremiumGroupExist()) {
+        discountAndPremiumCalc();
+      }
     }
   }
 
@@ -85,7 +88,7 @@ class KeishaCalculatePageController extends _$KeishaCalculatePageController {
 
     // 状態を更新
     state = state.copyWith(
-      divideResultRemain: remainPerPerson,
+      divideResult: remainPerPerson,
       remainingAmount: remainingAmount,
     );
   }
@@ -114,7 +117,7 @@ class KeishaCalculatePageController extends _$KeishaCalculatePageController {
     final remainPerPerson = remainingAmount / state.inputPeople;
     // 状態を更新
     state = state.copyWith(
-      divideResultRemain: remainPerPerson,
+      divideResult: remainPerPerson,
       remainingAmount: remainingAmount,
       // 更新された残額を保存
     );
@@ -123,6 +126,11 @@ class KeishaCalculatePageController extends _$KeishaCalculatePageController {
   // キリよく！グループが存在するかの判定
   bool isFitGroupExist() {
     return state.keishaGroups.any((group) => group.calcSlope == CalcSlope.fit);
+  }
+
+  // 割り引き、割り増しのグループが存在するかの判定
+  bool isDiscountOrPremiumGroupExist() {
+    return state.keishaGroups.any((group) => group.calcSlope != CalcSlope.fit);
   }
 
   // グループの人数判定

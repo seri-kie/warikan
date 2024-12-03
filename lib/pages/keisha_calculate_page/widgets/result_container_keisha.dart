@@ -10,7 +10,7 @@ class ResultContainerKeisha extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(keishaCalculatePageControllerProvider);
-    final calcResult = state.divideResultRemain;
+    final calcResult = state.divideResult;
     final keishaGroups = state.keishaGroups;
 
     return Container(

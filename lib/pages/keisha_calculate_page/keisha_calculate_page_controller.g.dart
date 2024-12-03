@@ -7,7 +7,7 @@ part of 'keisha_calculate_page_controller.dart';
 // **************************************************************************
 
 String _$keishaCalculatePageControllerHash() =>
-    r'b33b2743cda928295cd1b07996e7b109b3eff2ba';
+    r'd6b8d2124edefde342472efdef64baeb2a00c00f';
 
 /// See also [KeishaCalculatePageController].
 @ProviderFor(KeishaCalculatePageController)
