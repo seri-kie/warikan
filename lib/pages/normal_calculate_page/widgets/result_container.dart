@@ -16,16 +16,16 @@ class ResultContainer extends ConsumerWidget {
 
     return Container(
       alignment: Alignment.center,
-      width: 250,
-      height: 200,
+      width: MediaQuery.of(context).size.width * 0.8,
+      height: MediaQuery.of(context).size.width * 0.63,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(Assets.images.bgWarikan.path),
+          image: AssetImage(Assets.images.bgWarikan3.path),
           fit: BoxFit.fitWidth,
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

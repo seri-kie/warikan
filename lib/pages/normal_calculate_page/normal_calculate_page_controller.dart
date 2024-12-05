@@ -73,4 +73,15 @@ class NormalCalculatePageController extends _$NormalCalculatePageController {
       state = state.copyWith(divideResult: result, difference: difference);
     }
   }
+
+  void reset() {
+    state = const NormalCalculatePageState(
+      inputTotal: 0,
+      inputPeople: -1,
+      fraction: FractionRound.none,
+      divideResult: 0.0,
+      fractionPrice: 1,
+      difference: 0.0,
+    );
+  }
 }

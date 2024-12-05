@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:warikan/pages/keisha_calculate_page/keisha_calculate_page.dart';
 import 'package:warikan/pages/normal_calculate_page/normal_calculate_page.dart';
 
 class CalculatePage extends StatelessWidget {
@@ -24,7 +25,7 @@ class CalculatePage extends StatelessWidget {
             ),
           ),
           body: TabBarView(
-            children: [NormalCalculatePage(), const Text('傾斜')],
+            children: [NormalCalculatePage(), const KeishaCalculatePage()],
           ),
         ));
   }
