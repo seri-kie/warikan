@@ -16,12 +16,21 @@ class $AssetsImagesGen {
   AssetGenImage get bgWarikan =>
       const AssetGenImage('assets/images/bg_warikan.png');
 
+  /// File path: assets/images/bg_warikan_2.png
+  AssetGenImage get bgWarikan2 =>
+      const AssetGenImage('assets/images/bg_warikan_2.png');
+
+  /// File path: assets/images/bg_warikan_3.png
+  AssetGenImage get bgWarikan3 =>
+      const AssetGenImage('assets/images/bg_warikan_3.png');
+
   /// File path: assets/images/group_add_button.png
   AssetGenImage get groupAddButton =>
       const AssetGenImage('assets/images/group_add_button.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [bgWarikan, groupAddButton];
+  List<AssetGenImage> get values =>
+      [bgWarikan, bgWarikan2, bgWarikan3, groupAddButton];
 }
 
 class Assets {

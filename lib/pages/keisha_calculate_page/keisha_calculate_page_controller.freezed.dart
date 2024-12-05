@@ -20,6 +20,7 @@ mixin _$KeishaCalculatePageState {
   int get inputPeople => throw _privateConstructorUsedError;
   double get divideResult => throw _privateConstructorUsedError;
   int get remainingAmount => throw _privateConstructorUsedError;
+  int get remainingPeople => throw _privateConstructorUsedError;
   int get groupPeople => throw _privateConstructorUsedError;
   List<KeishaGroup> get keishaGroups => throw _privateConstructorUsedError;
 
@@ -39,6 +40,7 @@ abstract class $KeishaCalculatePageStateCopyWith<$Res> {
       int inputPeople,
       double divideResult,
       int remainingAmount,
+      int remainingPeople,
       int groupPeople,
       List<KeishaGroup> keishaGroups});
 }
@@ -61,6 +63,7 @@ class _$KeishaCalculatePageStateCopyWithImpl<$Res,
     Object? inputPeople = null,
     Object? divideResult = null,
     Object? remainingAmount = null,
+    Object? remainingPeople = null,
     Object? groupPeople = null,
     Object? keishaGroups = null,
   }) {
@@ -80,6 +83,10 @@ class _$KeishaCalculatePageStateCopyWithImpl<$Res,
       remainingAmount: null == remainingAmount
           ? _value.remainingAmount
           : remainingAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      remainingPeople: null == remainingPeople
+          ? _value.remainingPeople
+          : remainingPeople // ignore: cast_nullable_to_non_nullable
               as int,
       groupPeople: null == groupPeople
           ? _value.groupPeople
@@ -107,6 +114,7 @@ abstract class _$$KeishaCalculatePageStateImplCopyWith<$Res>
       int inputPeople,
       double divideResult,
       int remainingAmount,
+      int remainingPeople,
       int groupPeople,
       List<KeishaGroup> keishaGroups});
 }
@@ -128,6 +136,7 @@ class __$$KeishaCalculatePageStateImplCopyWithImpl<$Res>
     Object? inputPeople = null,
     Object? divideResult = null,
     Object? remainingAmount = null,
+    Object? remainingPeople = null,
     Object? groupPeople = null,
     Object? keishaGroups = null,
   }) {
@@ -147,6 +156,10 @@ class __$$KeishaCalculatePageStateImplCopyWithImpl<$Res>
       remainingAmount: null == remainingAmount
           ? _value.remainingAmount
           : remainingAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      remainingPeople: null == remainingPeople
+          ? _value.remainingPeople
+          : remainingPeople // ignore: cast_nullable_to_non_nullable
               as int,
       groupPeople: null == groupPeople
           ? _value.groupPeople
@@ -168,6 +181,7 @@ class _$KeishaCalculatePageStateImpl implements _KeishaCalculatePageState {
       required this.inputPeople,
       required this.divideResult,
       required this.remainingAmount,
+      required this.remainingPeople,
       required this.groupPeople,
       required final List<KeishaGroup> keishaGroups})
       : _keishaGroups = keishaGroups;
@@ -181,6 +195,8 @@ class _$KeishaCalculatePageStateImpl implements _KeishaCalculatePageState {
   @override
   final int remainingAmount;
   @override
+  final int remainingPeople;
+  @override
   final int groupPeople;
   final List<KeishaGroup> _keishaGroups;
   @override
@@ -192,7 +208,7 @@ class _$KeishaCalculatePageStateImpl implements _KeishaCalculatePageState {
 
   @override
   String toString() {
-    return 'KeishaCalculatePageState(inputTotal: $inputTotal, inputPeople: $inputPeople, divideResult: $divideResult, remainingAmount: $remainingAmount, groupPeople: $groupPeople, keishaGroups: $keishaGroups)';
+    return 'KeishaCalculatePageState(inputTotal: $inputTotal, inputPeople: $inputPeople, divideResult: $divideResult, remainingAmount: $remainingAmount, remainingPeople: $remainingPeople, groupPeople: $groupPeople, keishaGroups: $keishaGroups)';
   }
 
   @override
@@ -208,6 +224,8 @@ class _$KeishaCalculatePageStateImpl implements _KeishaCalculatePageState {
                 other.divideResult == divideResult) &&
             (identical(other.remainingAmount, remainingAmount) ||
                 other.remainingAmount == remainingAmount) &&
+            (identical(other.remainingPeople, remainingPeople) ||
+                other.remainingPeople == remainingPeople) &&
             (identical(other.groupPeople, groupPeople) ||
                 other.groupPeople == groupPeople) &&
             const DeepCollectionEquality()
@@ -221,6 +239,7 @@ class _$KeishaCalculatePageStateImpl implements _KeishaCalculatePageState {
       inputPeople,
       divideResult,
       remainingAmount,
+      remainingPeople,
       groupPeople,
       const DeepCollectionEquality().hash(_keishaGroups));
 
@@ -238,6 +257,7 @@ abstract class _KeishaCalculatePageState implements KeishaCalculatePageState {
           required final int inputPeople,
           required final double divideResult,
           required final int remainingAmount,
+          required final int remainingPeople,
           required final int groupPeople,
           required final List<KeishaGroup> keishaGroups}) =
       _$KeishaCalculatePageStateImpl;
@@ -250,6 +270,8 @@ abstract class _KeishaCalculatePageState implements KeishaCalculatePageState {
   double get divideResult;
   @override
   int get remainingAmount;
+  @override
+  int get remainingPeople;
   @override
   int get groupPeople;
   @override

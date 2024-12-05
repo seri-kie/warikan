@@ -13,76 +13,98 @@ class KeishaCalculatePage extends ConsumerWidget {
     final keishaGroups =
         ref.watch(keishaCalculatePageControllerProvider).keishaGroups;
 
+    final ScrollController scrollController = ScrollController();
+
     return Scaffold(
-      body: Column(
-        children: [
-          Row(
-            children: [
-              _inputTotalAmount(context, ref),
-              Expanded(child: _inputTotalPeople(context, ref)),
-            ],
-          ),
-          Column(
-            children: [
-              if (keishaGroups.isEmpty) ...[
-                const Center(
-                  child: Text('グループがありません'),
-                ),
-              ] else ...[
-                const Text('傾斜グループ一覧'),
-                const SizedBox(
-                  height: 5,
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: keishaGroups.length,
-                  itemBuilder: (context, index) {
-                    final group = keishaGroups[index];
-                    return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '${group.groupName}・',
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
-                          ),
-                          Text(
-                            '${group.totalPeople}名→',
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
-                          ),
-                          Text(
-                            '${group.totalAmount}円',
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
-                          ),
-                          if (group.calcSlope == CalcSlope.discount) ...[
-                            const Text(
-                              '引き',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
-                            ),
-                          ] else if (group.calcSlope == CalcSlope.premium) ...[
-                            const Text(
-                              '増し',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
-                            ),
-                          ]
-                        ]);
-                  },
-                ),
-              ]
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          const ResultContainerKeisha()
-        ],
+      body: SingleChildScrollView(
+        controller: scrollController,
+        child: Column(
+          children: [
+            Row(
+              children: [
+                _inputTotalAmount(context, ref),
+                Expanded(child: _inputTotalPeople(context, ref)),
+              ],
+            ),
+            Column(
+              children: [
+                if (keishaGroups.isEmpty) ...[
+                  const Center(
+                    child: Text('グループがありません'),
+                  ),
+                ] else ...[
+                  const Text('傾斜グループ一覧'),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxHeight: 80,
+                    ),
+                    child: Scrollbar(
+                      thumbVisibility: true,
+                      child: ListView.builder(
+                        controller: scrollController,
+                        shrinkWrap: true,
+                        itemCount: keishaGroups.length,
+                        itemBuilder: (context, index) {
+                          final group = keishaGroups[index];
+                          return Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Flexible(
+                                  flex: 1,
+                                  child: Text(
+                                    '${group.groupName}・',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                                Text(
+                                  '${group.totalPeople}名→',
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  '${group.totalAmount}円',
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                if (group.calcSlope == CalcSlope.discount) ...[
+                                  const Text(
+                                    '引き',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ] else if (group.calcSlope ==
+                                    CalcSlope.premium) ...[
+                                  const Text(
+                                    '増し',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                                const SizedBox(
+                                  width: 20,
+                                )
+                              ]);
+                        },
+                      ),
+                    ),
+                  ),
+                ]
+              ],
+            ),
+            const ResultContainerKeisha()
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {

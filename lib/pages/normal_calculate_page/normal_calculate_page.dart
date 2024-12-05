@@ -7,6 +7,8 @@ import 'package:warikan/pages/normal_calculate_page/widgets/result_container.dar
 class NormalCalculatePage extends ConsumerWidget {
   final int fraction = 1;
   Set<FractionRound> selected = {FractionRound.none};
+  final TextEditingController totalAmountController = TextEditingController();
+  final TextEditingController totalPeopleController = TextEditingController();
 
   NormalCalculatePage({super.key});
 
@@ -55,16 +57,10 @@ class NormalCalculatePage extends ConsumerWidget {
                   ))
             ],
             selected: selected),
-        const SizedBox(
-          height: 10,
-        ),
         if (ref.watch(normalCalculatePageControllerProvider).fraction !=
             FractionRound.none)
           _fractionChoiceChips(ref),
-        const SizedBox(
-          height: 10,
-        ),
-        const ResultContainer()
+        const ResultContainer(),
       ],
     );
   }
@@ -75,6 +71,7 @@ class NormalCalculatePage extends ConsumerWidget {
       width: MediaQuery.of(context).size.width * 0.55,
       child: TextFormField(
         keyboardType: TextInputType.number,
+        controller: totalAmountController,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         textInputAction: TextInputAction.next,
         onFieldSubmitted: (value) {
@@ -105,10 +102,11 @@ class NormalCalculatePage extends ConsumerWidget {
 
   Widget _inputTotalPeople(BuildContext context, WidgetRef ref) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.only(right: 15),
       width: MediaQuery.of(context).size.width * 0.55,
       child: TextFormField(
         keyboardType: TextInputType.number,
+        controller: totalPeopleController,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         onFieldSubmitted: (value) {
           if (value.isEmpty) {

@@ -15,68 +15,77 @@ class ResultContainerKeisha extends ConsumerWidget {
 
     return Container(
       alignment: Alignment.center,
-      width: 250,
-      height: 200,
+      width: MediaQuery.of(context).size.width * 0.8,
+      height: MediaQuery.of(context).size.width * 0.63,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(Assets.images.bgWarikan.path),
+          image: AssetImage(Assets.images.bgWarikan3.path),
           fit: BoxFit.fitWidth,
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.fromLTRB(25, 10, 25, 0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: keishaGroups.length,
-              itemBuilder: (context, index) {
-                final group = keishaGroups[index];
-                return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AutoSizeText(
-                        '${group.groupName}:',
-                        maxLines: 1,
-                        overflow: TextOverflow.clip,
-                        style: const TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                      if (group.calcSlope == CalcSlope.fit) ...[
-                        AutoSizeText(
-                          '${group.totalAmount}円',
-                          maxLines: 1,
-                          overflow: TextOverflow.clip,
-                          style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                      ] else if (group.calcSlope == CalcSlope.discount) ...[
-                        AutoSizeText(
-                          '${calcResult - group.totalAmount}円',
-                          maxLines: 1,
-                          overflow: TextOverflow.clip,
-                          style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                      ] else if (group.calcSlope == CalcSlope.premium) ...[
-                        AutoSizeText(
-                          '${calcResult + group.totalAmount}円',
-                          maxLines: 1,
-                          overflow: TextOverflow.clip,
-                          style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                      ]
-                    ]);
-              },
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.2,
+              ),
+              child: Scrollbar(
+                thickness: 5,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: keishaGroups.length,
+                  itemBuilder: (context, index) {
+                    final group = keishaGroups[index];
+                    return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: Text(
+                              '${group.groupName}:',
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          if (group.calcSlope == CalcSlope.fit) ...[
+                            Text(
+                              '${group.totalAmount}円',
+                              overflow: TextOverflow.clip,
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ] else if (group.calcSlope == CalcSlope.discount) ...[
+                            Text(
+                              '${calcResult - group.totalAmount}円',
+                              overflow: TextOverflow.clip,
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ] else if (group.calcSlope == CalcSlope.premium) ...[
+                            Text(
+                              '${calcResult + group.totalAmount}円',
+                              overflow: TextOverflow.clip,
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ]
+                        ]);
+                  },
+                ),
+              ),
             ),
             AutoSizeText(
               calcResult == 0
                   ? '金額と人数を入力してください'
-                  : (calcResult % 1 == 0 // 整数の場合
-                      ? '1人:${calcResult.toStringAsFixed(0)}円' // 整数として表示
-                      : '1人:${calcResult.toStringAsFixed(3)}円'), // それ以外は小数点以下3桁
+                  : state.remainingPeople > 0
+                      ? '残り${state.remainingPeople}人:${state.divideResult.toStringAsFixed(0)}円'
+                      : (calcResult % 1 == 0 // 整数の場合
+                          ? '1人:${calcResult.toStringAsFixed(0)}円' // 整数として表示
+                          : '1人:${calcResult.toStringAsFixed(3)}円'), // それ以外は小数点以下3桁
               maxLines: 1,
               overflow: TextOverflow.clip,
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
