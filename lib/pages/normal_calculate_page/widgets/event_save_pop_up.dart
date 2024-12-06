@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
+import 'package:warikan/models/event_normal.dart';
 
 class EventSavePopUp extends StatelessWidget {
-  EventSavePopUp({super.key});
+  EventSavePopUp({super.key, required this.isar, required this.event});
   final TextEditingController eventNameController = TextEditingController();
+  final Isar isar;
+  final EventNormal event;
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -22,13 +26,17 @@ class EventSavePopUp extends StatelessWidget {
           child: const Text('キャンセル'),
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async {
             String eventName = eventNameController.text;
-            debugPrint(eventNameController.text);
-            if (eventName.isEmpty) {
-              eventName = 'イベント名未設定';
+            if (eventName.isNotEmpty) {
+              event.eventName = eventName;
             }
-            Navigator.of(context).pop();
+            await isar.writeTxn(() async {
+              await isar.eventNormals.put(event);
+            });
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
           },
           child: const Text('保存'),
         ),

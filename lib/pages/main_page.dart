@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 import 'package:warikan/pages/calculate_page.dart';
 import 'package:warikan/pages/event_page.dart';
 import 'package:warikan/pages/setting_page.dart';
@@ -6,8 +7,10 @@ import 'package:warikan/pages/setting_page.dart';
 class MainPage extends StatefulWidget {
   const MainPage({
     super.key,
+    required this.isar,
   });
 
+  final Isar isar;
   @override
   State<MainPage> createState() => _MyHomePageState();
 }
@@ -15,7 +18,19 @@ class MainPage extends StatefulWidget {
 class _MyHomePageState extends State<MainPage> {
   int _selectedIndex = 0;
 
-  final pages = [const CalculatePage(), const EventPage(), const SettingPage()];
+  late final List<Widget> pages;
+
+  @override
+  void initState() {
+    super.initState();
+    pages = [
+      CalculatePage(
+        isar: widget.isar,
+      ),
+      const EventPage(),
+      const SettingPage()
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {

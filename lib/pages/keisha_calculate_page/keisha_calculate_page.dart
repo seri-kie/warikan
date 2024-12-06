@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:warikan/models/calc_slope.dart';
 import 'package:warikan/pages/keisha_calculate_page/keisha_calculate_page_controller.dart';
 import 'package:warikan/pages/keisha_calculate_page/widgets/result_container_keisha.dart';
 import 'package:warikan/pages/new_group_page/new_group_page.dart';

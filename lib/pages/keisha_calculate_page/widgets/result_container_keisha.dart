@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:warikan/gen/assets.gen.dart';
+import 'package:warikan/models/calc_slope.dart';
 import 'package:warikan/pages/keisha_calculate_page/keisha_calculate_page_controller.dart';
 
 class ResultContainerKeisha extends ConsumerWidget {

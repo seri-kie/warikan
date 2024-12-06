@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:warikan/models/event_normal.dart';
 import 'package:warikan/pages/main_page.dart';
 
-void main() {
-  runApp(const ProviderScope(child: MyApp()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // アプリのドキュメントディレクトリを取得
+  final dir = await getApplicationDocumentsDirectory();
+  final isar = await Isar.open(
+    [EventNormalSchema],
+    directory: dir.path,
+  );
+  runApp(ProviderScope(
+      child: MyApp(
+    isar: isar,
+  )));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.isar});
 
+  final Isar isar;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,7 +32,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Noto Sans JP',
       ),
-      home: const MainPage(),
+      home: MainPage(isar: isar),
     );
   }
 }
