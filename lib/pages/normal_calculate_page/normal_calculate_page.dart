@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:warikan/pages/normal_calculate_page/normal_calculate_page_controller.dart';
+import 'package:warikan/pages/normal_calculate_page/widgets/event_save_pop_up.dart';
 import 'package:warikan/pages/normal_calculate_page/widgets/result_container.dart';
 
 class NormalCalculatePage extends ConsumerWidget {
@@ -61,6 +62,18 @@ class NormalCalculatePage extends ConsumerWidget {
             FractionRound.none)
           _fractionChoiceChips(ref),
         const ResultContainer(),
+        const SizedBox(
+          height: 20,
+        ),
+        ElevatedButton(
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return EventSavePopUp();
+                  });
+            },
+            child: const Text('イベントを作成')),
       ],
     );
   }
