@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:warikan/models/event_keisha.dart';
 import 'package:warikan/models/event_normal.dart';
 import 'package:warikan/pages/main_page.dart';
 
@@ -10,7 +11,7 @@ void main() async {
   // アプリのドキュメントディレクトリを取得
   final dir = await getApplicationDocumentsDirectory();
   final isar = await Isar.open(
-    [EventNormalSchema],
+    [EventNormalSchema, EventKeishaSchema],
     directory: dir.path,
   );
   runApp(ProviderScope(

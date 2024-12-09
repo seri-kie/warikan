@@ -41,7 +41,7 @@ const EventKeishaSchema = CollectionSchema(
     r'remainPerPerson': PropertySchema(
       id: 4,
       name: r'remainPerPerson',
-      type: IsarType.long,
+      type: IsarType.double,
     )
   },
   estimateSize: _eventKeishaEstimateSize,
@@ -97,7 +97,7 @@ void _eventKeishaSerialize(
     object.keishaGroups,
   );
   writer.writeLong(offsets[3], object.remainPeople);
-  writer.writeLong(offsets[4], object.remainPerPerson);
+  writer.writeDouble(offsets[4], object.remainPerPerson);
 }
 
 EventKeisha _eventKeishaDeserialize(
@@ -108,7 +108,7 @@ EventKeisha _eventKeishaDeserialize(
 ) {
   final object = EventKeisha(
     date: reader.readDateTime(offsets[0]),
-    eventName: reader.readString(offsets[1]),
+    eventName: reader.readStringOrNull(offsets[1]) ?? 'イベント名未設定',
     keishaGroups: reader.readObjectList<KeishaGroupForIsar>(
       offsets[2],
       KeishaGroupForIsarSchema.deserialize,
@@ -116,7 +116,7 @@ EventKeisha _eventKeishaDeserialize(
       KeishaGroupForIsar(),
     ),
     remainPeople: reader.readLong(offsets[3]),
-    remainPerPerson: reader.readLong(offsets[4]),
+    remainPerPerson: reader.readDouble(offsets[4]),
   );
   object.id = id;
   return object;
@@ -132,7 +132,7 @@ P _eventKeishaDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset) ?? 'イベント名未設定') as P;
     case 2:
       return (reader.readObjectList<KeishaGroupForIsar>(
         offset,
@@ -143,7 +143,7 @@ P _eventKeishaDeserializeProp<P>(
     case 3:
       return (reader.readLong(offset)) as P;
     case 4:
-      return (reader.readLong(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -648,49 +648,58 @@ extension EventKeishaQueryFilter
   }
 
   QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
-      remainPerPersonEqualTo(int value) {
+      remainPerPersonEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'remainPerPerson',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
       remainPerPersonGreaterThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'remainPerPerson',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
       remainPerPersonLessThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'remainPerPerson',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
       remainPerPersonBetween(
-    int lower,
-    int upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -699,6 +708,7 @@ extension EventKeishaQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
@@ -897,7 +907,8 @@ extension EventKeishaQueryProperty
     });
   }
 
-  QueryBuilder<EventKeisha, int, QQueryOperations> remainPerPersonProperty() {
+  QueryBuilder<EventKeisha, double, QQueryOperations>
+      remainPerPersonProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'remainPerPerson');
     });

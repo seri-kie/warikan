@@ -7,20 +7,17 @@ part 'event_keisha.g.dart';
 class EventKeisha {
   Id id = Isar.autoIncrement;
 
-  final String eventName;
+  String eventName;
   final List<KeishaGroupForIsar>? keishaGroups;
-  final int remainPerPerson;
+  final double remainPerPerson;
   final int remainPeople;
   final DateTime date;
 
   EventKeisha({
-    required this.eventName,
+    this.eventName = 'イベント名未設定',
     required this.keishaGroups,
     required this.remainPerPerson,
     required this.remainPeople,
     required this.date,
   });
-  set eventName(String eventName) {
-    eventName = eventName;
-  }
 }

@@ -30,7 +30,7 @@ class CalculatePage extends StatelessWidget {
           body: TabBarView(
             children: [
               NormalCalculatePage(isar: isar),
-              const KeishaCalculatePage()
+              KeishaCalculatePage(isar: isar),
             ],
           ),
         ));

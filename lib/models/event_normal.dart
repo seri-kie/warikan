@@ -23,8 +23,4 @@ class EventNormal {
     required this.difference,
     required this.date,
   });
-
-  void updateEventName(String value) {
-    eventName = value;
-  }
 }
