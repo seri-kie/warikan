@@ -11,8 +11,10 @@ import 'package:warikan/pages/keisha_calculate_page/widgets/result_container_kei
 import 'package:warikan/pages/new_group_page/new_group_page.dart';
 
 class KeishaCalculatePage extends ConsumerWidget {
-  const KeishaCalculatePage({super.key, required this.isar});
+  KeishaCalculatePage({super.key, required this.isar});
   final Isar isar;
+  final TextEditingController totalAmountController = TextEditingController();
+  final TextEditingController totalPeopleController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -136,6 +138,7 @@ class KeishaCalculatePage extends ConsumerWidget {
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         textInputAction: TextInputAction.next,
+        controller: totalAmountController,
         onFieldSubmitted: (value) {
           if (value.isEmpty) {
             return;
@@ -168,6 +171,7 @@ class KeishaCalculatePage extends ConsumerWidget {
       child: TextFormField(
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        controller: totalPeopleController,
         onFieldSubmitted: (value) {
           if (value.isEmpty) {
             return;
@@ -201,30 +205,33 @@ class KeishaCalculatePage extends ConsumerWidget {
             foregroundColor: Colors.white,
             backgroundColor: Colors.green,
           ),
-          onPressed: () {
-            final state = ref.read(keishaCalculatePageControllerProvider);
-            final List<KeishaGroupForIsar> keishaGroups = [];
-            for (final group in state.keishaGroups) {
-              keishaGroups.add(KeishaGroupForIsar(
-                  groupName: group.groupName,
-                  totalAmount: group.totalAmount,
-                  totalPeople: group.totalPeople,
-                  calcSlope: group.calcSlope));
-            }
-            final eventKeisha = EventKeisha(
-                keishaGroups: keishaGroups,
-                remainPerPerson: state.divideResult,
-                remainPeople: state.remainingPeople,
-                date: DateTime.now());
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return EventSavePopUpKeisha(
-                    isar: isar,
-                    event: eventKeisha,
-                  );
-                });
-          },
+          onPressed: totalAmountController.text.isEmpty ||
+                  totalPeopleController.text.isEmpty
+              ? null
+              : () {
+                  final state = ref.read(keishaCalculatePageControllerProvider);
+                  final List<KeishaGroupForIsar> keishaGroups = [];
+                  for (final group in state.keishaGroups) {
+                    keishaGroups.add(KeishaGroupForIsar(
+                        groupName: group.groupName,
+                        totalAmount: group.totalAmount,
+                        totalPeople: group.totalPeople,
+                        calcSlope: group.calcSlope));
+                  }
+                  final eventKeisha = EventKeisha(
+                      keishaGroups: keishaGroups,
+                      remainPerPerson: state.divideResult,
+                      remainPeople: state.remainingPeople,
+                      date: DateTime.now());
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return EventSavePopUpKeisha(
+                          isar: isar,
+                          event: eventKeisha,
+                        );
+                      });
+                },
           child: const Text('イベントを保存',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
     );

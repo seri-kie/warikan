@@ -50,6 +50,10 @@ class EventSavePopUpKeisha extends StatelessWidget {
               await isar.eventKeishas.put(event);
             });
             if (context.mounted) {
+              // グループ追加完了のメッセージを表示
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('イベントが保存されました')),
+              );
               Navigator.of(context).pop();
             }
           },

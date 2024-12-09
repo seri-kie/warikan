@@ -220,23 +220,26 @@ class NormalCalculatePage extends ConsumerWidget {
             foregroundColor: Colors.white,
             backgroundColor: Colors.green,
           ),
-          onPressed: () {
-            final state = ref.read(normalCalculatePageControllerProvider);
-            final eventNormal = EventNormal(
-                divideResult: state.divideResult,
-                inputPeople: state.inputPeople,
-                fraction: state.fraction,
-                difference: state.difference,
-                date: DateTime.now());
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return EventSavePopUp(
-                    isar: isar,
-                    event: eventNormal,
-                  );
-                });
-          },
+          onPressed: totalAmountController.text.isEmpty ||
+                  totalPeopleController.text.isEmpty
+              ? null
+              : () {
+                  final state = ref.read(normalCalculatePageControllerProvider);
+                  final eventNormal = EventNormal(
+                      divideResult: state.divideResult,
+                      inputPeople: state.inputPeople,
+                      fraction: state.fraction,
+                      difference: state.difference,
+                      date: DateTime.now());
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return EventSavePopUp(
+                          isar: isar,
+                          event: eventNormal,
+                        );
+                      });
+                },
           child: const Text('イベントを保存',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
     );
