@@ -68,25 +68,7 @@ class NormalCalculatePage extends ConsumerWidget {
         const SizedBox(
           height: 20,
         ),
-        ElevatedButton(
-            onPressed: () {
-              final state = ref.read(normalCalculatePageControllerProvider);
-              final eventNormal = EventNormal(
-                  divideResult: state.divideResult,
-                  inputPeople: state.inputPeople,
-                  fraction: state.fraction,
-                  difference: state.difference,
-                  date: DateTime.now());
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return EventSavePopUp(
-                      isar: isar,
-                      event: eventNormal,
-                    );
-                  });
-            },
-            child: const Text('イベントを作成')),
+        eventSaveButton(context, ref),
       ],
     );
   }
@@ -225,6 +207,38 @@ class NormalCalculatePage extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget eventSaveButton(BuildContext context, WidgetRef ref) {
+    return SizedBox(
+      width: 200,
+      height: 55,
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            side: const BorderSide(color: Colors.white, width: 2.5),
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.green,
+          ),
+          onPressed: () {
+            final state = ref.read(normalCalculatePageControllerProvider);
+            final eventNormal = EventNormal(
+                divideResult: state.divideResult,
+                inputPeople: state.inputPeople,
+                fraction: state.fraction,
+                difference: state.difference,
+                date: DateTime.now());
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return EventSavePopUp(
+                    isar: isar,
+                    event: eventNormal,
+                  );
+                });
+          },
+          child: const Text('イベントを保存',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
     );
   }
 }

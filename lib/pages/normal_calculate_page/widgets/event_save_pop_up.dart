@@ -11,7 +11,11 @@ class EventSavePopUp extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('イベントを保存'),
-      icon: const Icon(Icons.event),
+      icon: const Icon(
+        Icons.event_available,
+        size: 36,
+        color: Colors.green,
+      ),
       content: TextField(
         controller: eventNameController,
         decoration: const InputDecoration(
@@ -19,13 +23,24 @@ class EventSavePopUp extends StatelessWidget {
         ),
       ),
       actions: [
-        TextButton(
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white, // ボタンの背景色
+            side: const BorderSide(color: Colors.black, width: 0.5),
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
           child: const Text('キャンセル'),
         ),
-        TextButton(
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            side: const BorderSide(color: Colors.white, width: 1.5),
+            foregroundColor: Colors.white, // ボタンの背景色
+            backgroundColor: Colors.green,
+            textStyle:
+                const TextStyle(fontWeight: FontWeight.bold), // テキストのスタイル
+          ),
           onPressed: () async {
             String eventName = eventNameController.text;
             if (eventName.isNotEmpty) {
@@ -41,6 +56,7 @@ class EventSavePopUp extends StatelessWidget {
           child: const Text('保存'),
         ),
       ],
+      contentPadding: const EdgeInsets.all(40),
     );
   }
 }
