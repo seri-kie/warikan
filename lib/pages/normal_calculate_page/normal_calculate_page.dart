@@ -226,8 +226,8 @@ class NormalCalculatePage extends ConsumerWidget {
               : () {
                   final state = ref.read(normalCalculatePageControllerProvider);
                   final eventNormal = EventNormal(
-                      divideResult: state.divideResult,
-                      inputPeople: state.inputPeople,
+                      remainPerPerson: state.divideResult,
+                      remainPeople: state.inputPeople,
                       fraction: state.fraction,
                       difference: state.difference,
                       date: DateTime.now());

@@ -27,26 +27,26 @@ const EventNormalSchema = CollectionSchema(
       name: r'difference',
       type: IsarType.double,
     ),
-    r'divideResult': PropertySchema(
-      id: 2,
-      name: r'divideResult',
-      type: IsarType.double,
-    ),
     r'eventName': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'eventName',
       type: IsarType.string,
     ),
     r'fraction': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'fraction',
       type: IsarType.string,
       enumMap: _EventNormalfractionEnumValueMap,
     ),
-    r'inputPeople': PropertySchema(
-      id: 5,
-      name: r'inputPeople',
+    r'remainPeople': PropertySchema(
+      id: 4,
+      name: r'remainPeople',
       type: IsarType.long,
+    ),
+    r'remainPerPerson': PropertySchema(
+      id: 5,
+      name: r'remainPerPerson',
+      type: IsarType.double,
     )
   },
   estimateSize: _eventNormalEstimateSize,
@@ -82,10 +82,10 @@ void _eventNormalSerialize(
 ) {
   writer.writeDateTime(offsets[0], object.date);
   writer.writeDouble(offsets[1], object.difference);
-  writer.writeDouble(offsets[2], object.divideResult);
-  writer.writeString(offsets[3], object.eventName);
-  writer.writeString(offsets[4], object.fraction.name);
-  writer.writeLong(offsets[5], object.inputPeople);
+  writer.writeString(offsets[2], object.eventName);
+  writer.writeString(offsets[3], object.fraction.name);
+  writer.writeLong(offsets[4], object.remainPeople);
+  writer.writeDouble(offsets[5], object.remainPerPerson);
 }
 
 EventNormal _eventNormalDeserialize(
@@ -97,13 +97,13 @@ EventNormal _eventNormalDeserialize(
   final object = EventNormal(
     date: reader.readDateTime(offsets[0]),
     difference: reader.readDouble(offsets[1]),
-    divideResult: reader.readDouble(offsets[2]),
-    eventName: reader.readStringOrNull(offsets[3]) ?? 'イベント名未設定',
     fraction:
-        _EventNormalfractionValueEnumMap[reader.readStringOrNull(offsets[4])] ??
+        _EventNormalfractionValueEnumMap[reader.readStringOrNull(offsets[3])] ??
             FractionRound.none,
-    inputPeople: reader.readLong(offsets[5]),
+    remainPeople: reader.readLong(offsets[4]),
+    remainPerPerson: reader.readDouble(offsets[5]),
   );
+  object.eventName = reader.readString(offsets[2]);
   object.id = id;
   return object;
 }
@@ -120,15 +120,15 @@ P _eventNormalDeserializeProp<P>(
     case 1:
       return (reader.readDouble(offset)) as P;
     case 2:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readStringOrNull(offset) ?? 'イベント名未設定') as P;
-    case 4:
       return (_EventNormalfractionValueEnumMap[
               reader.readStringOrNull(offset)] ??
           FractionRound.none) as P;
-    case 5:
+    case 4:
       return (reader.readLong(offset)) as P;
+    case 5:
+      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -348,72 +348,6 @@ extension EventNormalQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'difference',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
-      divideResultEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'divideResult',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
-      divideResultGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'divideResult',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
-      divideResultLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'divideResult',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
-      divideResultBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'divideResult',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -748,45 +682,45 @@ extension EventNormalQueryFilter
   }
 
   QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
-      inputPeopleEqualTo(int value) {
+      remainPeopleEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'inputPeople',
+        property: r'remainPeople',
         value: value,
       ));
     });
   }
 
   QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
-      inputPeopleGreaterThan(
+      remainPeopleGreaterThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'inputPeople',
+        property: r'remainPeople',
         value: value,
       ));
     });
   }
 
   QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
-      inputPeopleLessThan(
+      remainPeopleLessThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'inputPeople',
+        property: r'remainPeople',
         value: value,
       ));
     });
   }
 
   QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
-      inputPeopleBetween(
+      remainPeopleBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -794,11 +728,77 @@ extension EventNormalQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'inputPeople',
+        property: r'remainPeople',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      remainPerPersonEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'remainPerPerson',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      remainPerPersonGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'remainPerPerson',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      remainPerPersonLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'remainPerPerson',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      remainPerPersonBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'remainPerPerson',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
@@ -836,19 +836,6 @@ extension EventNormalQuerySortBy
     });
   }
 
-  QueryBuilder<EventNormal, EventNormal, QAfterSortBy> sortByDivideResult() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'divideResult', Sort.asc);
-    });
-  }
-
-  QueryBuilder<EventNormal, EventNormal, QAfterSortBy>
-      sortByDivideResultDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'divideResult', Sort.desc);
-    });
-  }
-
   QueryBuilder<EventNormal, EventNormal, QAfterSortBy> sortByEventName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'eventName', Sort.asc);
@@ -873,15 +860,29 @@ extension EventNormalQuerySortBy
     });
   }
 
-  QueryBuilder<EventNormal, EventNormal, QAfterSortBy> sortByInputPeople() {
+  QueryBuilder<EventNormal, EventNormal, QAfterSortBy> sortByRemainPeople() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'inputPeople', Sort.asc);
+      return query.addSortBy(r'remainPeople', Sort.asc);
     });
   }
 
-  QueryBuilder<EventNormal, EventNormal, QAfterSortBy> sortByInputPeopleDesc() {
+  QueryBuilder<EventNormal, EventNormal, QAfterSortBy>
+      sortByRemainPeopleDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'inputPeople', Sort.desc);
+      return query.addSortBy(r'remainPeople', Sort.desc);
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterSortBy> sortByRemainPerPerson() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remainPerPerson', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterSortBy>
+      sortByRemainPerPersonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remainPerPerson', Sort.desc);
     });
   }
 }
@@ -909,19 +910,6 @@ extension EventNormalQuerySortThenBy
   QueryBuilder<EventNormal, EventNormal, QAfterSortBy> thenByDifferenceDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'difference', Sort.desc);
-    });
-  }
-
-  QueryBuilder<EventNormal, EventNormal, QAfterSortBy> thenByDivideResult() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'divideResult', Sort.asc);
-    });
-  }
-
-  QueryBuilder<EventNormal, EventNormal, QAfterSortBy>
-      thenByDivideResultDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'divideResult', Sort.desc);
     });
   }
 
@@ -961,15 +949,29 @@ extension EventNormalQuerySortThenBy
     });
   }
 
-  QueryBuilder<EventNormal, EventNormal, QAfterSortBy> thenByInputPeople() {
+  QueryBuilder<EventNormal, EventNormal, QAfterSortBy> thenByRemainPeople() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'inputPeople', Sort.asc);
+      return query.addSortBy(r'remainPeople', Sort.asc);
     });
   }
 
-  QueryBuilder<EventNormal, EventNormal, QAfterSortBy> thenByInputPeopleDesc() {
+  QueryBuilder<EventNormal, EventNormal, QAfterSortBy>
+      thenByRemainPeopleDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'inputPeople', Sort.desc);
+      return query.addSortBy(r'remainPeople', Sort.desc);
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterSortBy> thenByRemainPerPerson() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remainPerPerson', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterSortBy>
+      thenByRemainPerPersonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remainPerPerson', Sort.desc);
     });
   }
 }
@@ -988,12 +990,6 @@ extension EventNormalQueryWhereDistinct
     });
   }
 
-  QueryBuilder<EventNormal, EventNormal, QDistinct> distinctByDivideResult() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'divideResult');
-    });
-  }
-
   QueryBuilder<EventNormal, EventNormal, QDistinct> distinctByEventName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1008,9 +1004,16 @@ extension EventNormalQueryWhereDistinct
     });
   }
 
-  QueryBuilder<EventNormal, EventNormal, QDistinct> distinctByInputPeople() {
+  QueryBuilder<EventNormal, EventNormal, QDistinct> distinctByRemainPeople() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'inputPeople');
+      return query.addDistinctBy(r'remainPeople');
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QDistinct>
+      distinctByRemainPerPerson() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'remainPerPerson');
     });
   }
 }
@@ -1035,12 +1038,6 @@ extension EventNormalQueryProperty
     });
   }
 
-  QueryBuilder<EventNormal, double, QQueryOperations> divideResultProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'divideResult');
-    });
-  }
-
   QueryBuilder<EventNormal, String, QQueryOperations> eventNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'eventName');
@@ -1054,9 +1051,16 @@ extension EventNormalQueryProperty
     });
   }
 
-  QueryBuilder<EventNormal, int, QQueryOperations> inputPeopleProperty() {
+  QueryBuilder<EventNormal, int, QQueryOperations> remainPeopleProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'inputPeople');
+      return query.addPropertyName(r'remainPeople');
+    });
+  }
+
+  QueryBuilder<EventNormal, double, QQueryOperations>
+      remainPerPersonProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'remainPerPerson');
     });
   }
 }

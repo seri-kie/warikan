@@ -108,7 +108,6 @@ EventKeisha _eventKeishaDeserialize(
 ) {
   final object = EventKeisha(
     date: reader.readDateTime(offsets[0]),
-    eventName: reader.readStringOrNull(offsets[1]) ?? 'イベント名未設定',
     keishaGroups: reader.readObjectList<KeishaGroupForIsar>(
       offsets[2],
       KeishaGroupForIsarSchema.deserialize,
@@ -118,6 +117,7 @@ EventKeisha _eventKeishaDeserialize(
     remainPeople: reader.readLong(offsets[3]),
     remainPerPerson: reader.readDouble(offsets[4]),
   );
+  object.eventName = reader.readString(offsets[1]);
   object.id = id;
   return object;
 }
@@ -132,7 +132,7 @@ P _eventKeishaDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset) ?? 'イベント名未設定') as P;
+      return (reader.readString(offset)) as P;
     case 2:
       return (reader.readObjectList<KeishaGroupForIsar>(
         offset,

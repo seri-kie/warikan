@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:warikan/pages/calculate_page.dart';
-import 'package:warikan/pages/event_page.dart';
+import 'package:warikan/pages/event_page/event_page.dart';
 import 'package:warikan/pages/setting_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -27,7 +27,9 @@ class _MyHomePageState extends State<MainPage> {
       CalculatePage(
         isar: widget.isar,
       ),
-      const EventPage(),
+      EventPage(
+        isar: widget.isar,
+      ),
       const SettingPage()
     ];
   }
