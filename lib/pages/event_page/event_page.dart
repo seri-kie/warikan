@@ -3,6 +3,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:isar/isar.dart';
 import 'package:warikan/models/event_keisha.dart';
 import 'package:warikan/models/event_normal.dart';
+import 'package:warikan/pages/event_page/widgets/list_tile_keisha.dart';
 import 'package:warikan/pages/event_page/widgets/list_tile_normal.dart';
 
 class EventPage extends StatelessWidget {
@@ -38,11 +39,15 @@ class EventPage extends StatelessWidget {
                         ),
                       ));
                 } else if (event is EventKeisha) {
-                  return ListTile(
-                    title: Text(event.eventName),
-                    subtitle: Text(
-                        '割り勘結果: ${event.remainPerPerson}円, 人数: ${event.remainPeople}人, 割引の種類: ${event.keishaGroups.toString().split('.').last}'),
-                  );
+                  return AnimationConfiguration.staggeredList(
+                      position: index,
+                      duration: const Duration(milliseconds: 375),
+                      child: SlideAnimation(
+                        verticalOffset: 50.0,
+                        child: FadeInAnimation(
+                          child: ListTileKeisha(event: event),
+                        ),
+                      ));
                 } else {
                   return const SizedBox.shrink();
                 }
