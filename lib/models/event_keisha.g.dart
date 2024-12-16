@@ -17,39 +17,44 @@ const EventKeishaSchema = CollectionSchema(
   name: r'EventKeisha',
   id: 5999273754070171753,
   properties: {
-    r'date': PropertySchema(
+    r'allPeople': PropertySchema(
       id: 0,
+      name: r'allPeople',
+      type: IsarType.long,
+    ),
+    r'date': PropertySchema(
+      id: 1,
       name: r'date',
       type: IsarType.dateTime,
     ),
     r'eventName': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'eventName',
       type: IsarType.string,
     ),
     r'keishaGroups': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'keishaGroups',
       type: IsarType.objectList,
       target: r'KeishaGroupForIsar',
     ),
     r'nameList': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'nameList',
       type: IsarType.stringList,
     ),
     r'payList': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'payList',
       type: IsarType.boolList,
     ),
     r'remainPeople': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'remainPeople',
       type: IsarType.long,
     ),
     r'remainPerPerson': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'remainPerPerson',
       type: IsarType.double,
     )
@@ -106,18 +111,19 @@ void _eventKeishaSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDateTime(offsets[0], object.date);
-  writer.writeString(offsets[1], object.eventName);
+  writer.writeLong(offsets[0], object.allPeople);
+  writer.writeDateTime(offsets[1], object.date);
+  writer.writeString(offsets[2], object.eventName);
   writer.writeObjectList<KeishaGroupForIsar>(
-    offsets[2],
+    offsets[3],
     allOffsets,
     KeishaGroupForIsarSchema.serialize,
     object.keishaGroups,
   );
-  writer.writeStringList(offsets[3], object.nameList);
-  writer.writeBoolList(offsets[4], object.payList);
-  writer.writeLong(offsets[5], object.remainPeople);
-  writer.writeDouble(offsets[6], object.remainPerPerson);
+  writer.writeStringList(offsets[4], object.nameList);
+  writer.writeBoolList(offsets[5], object.payList);
+  writer.writeLong(offsets[6], object.remainPeople);
+  writer.writeDouble(offsets[7], object.remainPerPerson);
 }
 
 EventKeisha _eventKeishaDeserialize(
@@ -127,20 +133,21 @@ EventKeisha _eventKeishaDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = EventKeisha(
-    date: reader.readDateTime(offsets[0]),
+    allPeople: reader.readLong(offsets[0]),
+    date: reader.readDateTime(offsets[1]),
     keishaGroups: reader.readObjectList<KeishaGroupForIsar>(
-      offsets[2],
+      offsets[3],
       KeishaGroupForIsarSchema.deserialize,
       allOffsets,
       KeishaGroupForIsar(),
     ),
-    remainPeople: reader.readLong(offsets[5]),
-    remainPerPerson: reader.readDouble(offsets[6]),
+    remainPeople: reader.readLong(offsets[6]),
+    remainPerPerson: reader.readDouble(offsets[7]),
   );
-  object.eventName = reader.readString(offsets[1]);
+  object.eventName = reader.readString(offsets[2]);
   object.id = id;
-  object.nameList = reader.readStringList(offsets[3]) ?? [];
-  object.payList = reader.readBoolList(offsets[4]) ?? [];
+  object.nameList = reader.readStringList(offsets[4]) ?? [];
+  object.payList = reader.readBoolList(offsets[5]) ?? [];
   return object;
 }
 
@@ -152,23 +159,25 @@ P _eventKeishaDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
       return (reader.readObjectList<KeishaGroupForIsar>(
         offset,
         KeishaGroupForIsarSchema.deserialize,
         allOffsets,
         KeishaGroupForIsar(),
       )) as P;
-    case 3:
-      return (reader.readStringList(offset) ?? []) as P;
     case 4:
-      return (reader.readBoolList(offset) ?? []) as P;
+      return (reader.readStringList(offset) ?? []) as P;
     case 5:
-      return (reader.readLong(offset)) as P;
+      return (reader.readBoolList(offset) ?? []) as P;
     case 6:
+      return (reader.readLong(offset)) as P;
+    case 7:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -268,6 +277,62 @@ extension EventKeishaQueryWhere
 
 extension EventKeishaQueryFilter
     on QueryBuilder<EventKeisha, EventKeisha, QFilterCondition> {
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      allPeopleEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'allPeople',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      allPeopleGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'allPeople',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      allPeopleLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'allPeople',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      allPeopleBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'allPeople',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition> dateEqualTo(
       DateTime value) {
     return QueryBuilder.apply(this, (query) {
@@ -1079,6 +1144,18 @@ extension EventKeishaQueryLinks
 
 extension EventKeishaQuerySortBy
     on QueryBuilder<EventKeisha, EventKeisha, QSortBy> {
+  QueryBuilder<EventKeisha, EventKeisha, QAfterSortBy> sortByAllPeople() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allPeople', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterSortBy> sortByAllPeopleDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allPeople', Sort.desc);
+    });
+  }
+
   QueryBuilder<EventKeisha, EventKeisha, QAfterSortBy> sortByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.asc);
@@ -1132,6 +1209,18 @@ extension EventKeishaQuerySortBy
 
 extension EventKeishaQuerySortThenBy
     on QueryBuilder<EventKeisha, EventKeisha, QSortThenBy> {
+  QueryBuilder<EventKeisha, EventKeisha, QAfterSortBy> thenByAllPeople() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allPeople', Sort.asc);
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterSortBy> thenByAllPeopleDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'allPeople', Sort.desc);
+    });
+  }
+
   QueryBuilder<EventKeisha, EventKeisha, QAfterSortBy> thenByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.asc);
@@ -1197,6 +1286,12 @@ extension EventKeishaQuerySortThenBy
 
 extension EventKeishaQueryWhereDistinct
     on QueryBuilder<EventKeisha, EventKeisha, QDistinct> {
+  QueryBuilder<EventKeisha, EventKeisha, QDistinct> distinctByAllPeople() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'allPeople');
+    });
+  }
+
   QueryBuilder<EventKeisha, EventKeisha, QDistinct> distinctByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'date');
@@ -1241,6 +1336,12 @@ extension EventKeishaQueryProperty
   QueryBuilder<EventKeisha, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<EventKeisha, int, QQueryOperations> allPeopleProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'allPeople');
     });
   }
 

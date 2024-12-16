@@ -46,6 +46,8 @@ class EventSavePopUpKeisha extends StatelessWidget {
             if (eventName.isNotEmpty) {
               event.eventName = eventName;
             }
+            event.nameList = List<String>.generate(event.allPeople, (_) => '');
+            event.payList = List<bool>.generate(event.allPeople, (_) => false);
             await isar.writeTxn(() async {
               await isar.eventKeishas.put(event);
             });

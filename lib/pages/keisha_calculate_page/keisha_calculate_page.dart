@@ -222,6 +222,7 @@ class KeishaCalculatePage extends ConsumerWidget {
                       keishaGroups: keishaGroups,
                       remainPerPerson: state.divideResult,
                       remainPeople: state.remainingPeople,
+                      allPeople: int.parse(totalPeopleController.text),
                       date: DateTime.now());
                   showDialog(
                       context: context,

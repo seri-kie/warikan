@@ -77,7 +77,11 @@ class _EventPageState extends State<EventPage> {
                     child: SlideAnimation(
                       verticalOffset: 50.0,
                       child: FadeInAnimation(
-                        child: ListTileKeisha(event: event),
+                        child: ListTileKeisha(
+                          event: event,
+                          isar: widget.isar,
+                          onRefresh: _loadEvents,
+                        ),
                       ),
                     ),
                   );

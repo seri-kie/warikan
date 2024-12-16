@@ -9,10 +9,12 @@ class EventKeisha extends Event {
   Id id = Isar.autoIncrement;
 
   final List<KeishaGroupForIsar>? keishaGroups;
+  final int allPeople;
 
   EventKeisha({
     required super.remainPerPerson,
     required super.remainPeople,
+    required this.allPeople,
     required super.date,
     required this.keishaGroups,
   });
