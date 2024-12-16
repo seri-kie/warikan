@@ -33,13 +33,23 @@ const EventKeishaSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'KeishaGroupForIsar',
     ),
-    r'remainPeople': PropertySchema(
+    r'nameList': PropertySchema(
       id: 3,
+      name: r'nameList',
+      type: IsarType.stringList,
+    ),
+    r'payList': PropertySchema(
+      id: 4,
+      name: r'payList',
+      type: IsarType.boolList,
+    ),
+    r'remainPeople': PropertySchema(
+      id: 5,
       name: r'remainPeople',
       type: IsarType.long,
     ),
     r'remainPerPerson': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'remainPerPerson',
       type: IsarType.double,
     )
@@ -79,6 +89,14 @@ int _eventKeishaEstimateSize(
       }
     }
   }
+  bytesCount += 3 + object.nameList.length * 3;
+  {
+    for (var i = 0; i < object.nameList.length; i++) {
+      final value = object.nameList[i];
+      bytesCount += value.length * 3;
+    }
+  }
+  bytesCount += 3 + object.payList.length;
   return bytesCount;
 }
 
@@ -96,8 +114,10 @@ void _eventKeishaSerialize(
     KeishaGroupForIsarSchema.serialize,
     object.keishaGroups,
   );
-  writer.writeLong(offsets[3], object.remainPeople);
-  writer.writeDouble(offsets[4], object.remainPerPerson);
+  writer.writeStringList(offsets[3], object.nameList);
+  writer.writeBoolList(offsets[4], object.payList);
+  writer.writeLong(offsets[5], object.remainPeople);
+  writer.writeDouble(offsets[6], object.remainPerPerson);
 }
 
 EventKeisha _eventKeishaDeserialize(
@@ -114,11 +134,13 @@ EventKeisha _eventKeishaDeserialize(
       allOffsets,
       KeishaGroupForIsar(),
     ),
-    remainPeople: reader.readLong(offsets[3]),
-    remainPerPerson: reader.readDouble(offsets[4]),
+    remainPeople: reader.readLong(offsets[5]),
+    remainPerPerson: reader.readDouble(offsets[6]),
   );
   object.eventName = reader.readString(offsets[1]);
   object.id = id;
+  object.nameList = reader.readStringList(offsets[3]) ?? [];
+  object.payList = reader.readBoolList(offsets[4]) ?? [];
   return object;
 }
 
@@ -141,8 +163,12 @@ P _eventKeishaDeserializeProp<P>(
         KeishaGroupForIsar(),
       )) as P;
     case 3:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringList(offset) ?? []) as P;
     case 4:
+      return (reader.readBoolList(offset) ?? []) as P;
+    case 5:
+      return (reader.readLong(offset)) as P;
+    case 6:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -592,6 +618,330 @@ extension EventKeishaQueryFilter
   }
 
   QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'nameList',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'nameList',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'nameList',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'nameList',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'nameList',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'nameList',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListElementContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'nameList',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListElementMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'nameList',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'nameList',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'nameList',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameList',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameList',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameList',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameList',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameList',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      nameListLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameList',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      payListElementEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'payList',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      payListLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'payList',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      payListIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'payList',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      payListIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'payList',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      payListLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'payList',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      payListLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'payList',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
+      payListLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'payList',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QAfterFilterCondition>
       remainPeopleEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -860,6 +1210,18 @@ extension EventKeishaQueryWhereDistinct
     });
   }
 
+  QueryBuilder<EventKeisha, EventKeisha, QDistinct> distinctByNameList() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'nameList');
+    });
+  }
+
+  QueryBuilder<EventKeisha, EventKeisha, QDistinct> distinctByPayList() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'payList');
+    });
+  }
+
   QueryBuilder<EventKeisha, EventKeisha, QDistinct> distinctByRemainPeople() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'remainPeople');
@@ -898,6 +1260,18 @@ extension EventKeishaQueryProperty
       keishaGroupsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'keishaGroups');
+    });
+  }
+
+  QueryBuilder<EventKeisha, List<String>, QQueryOperations> nameListProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'nameList');
+    });
+  }
+
+  QueryBuilder<EventKeisha, List<bool>, QQueryOperations> payListProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'payList');
     });
   }
 

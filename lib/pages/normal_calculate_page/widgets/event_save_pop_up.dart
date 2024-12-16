@@ -46,6 +46,10 @@ class EventSavePopUp extends StatelessWidget {
             if (eventName.isNotEmpty) {
               event.eventName = eventName;
             }
+            event.nameList =
+                List<String>.generate(event.remainPeople, (_) => '');
+            event.payList =
+                List<bool>.generate(event.remainPeople, (_) => false);
             await isar.writeTxn(() async {
               await isar.eventNormals.put(event);
             });

@@ -6,14 +6,41 @@ import 'package:warikan/models/event_normal.dart';
 import 'package:warikan/pages/event_page/widgets/list_tile_keisha.dart';
 import 'package:warikan/pages/event_page/widgets/list_tile_normal.dart';
 
-class EventPage extends StatelessWidget {
+class EventPage extends StatefulWidget {
   const EventPage({super.key, required this.isar});
   final Isar isar;
 
   @override
+  State<EventPage> createState() => _EventPageState();
+}
+
+class _EventPageState extends State<EventPage> {
+  late Future<List<dynamic>> _eventsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEvents();
+  }
+
+  void _loadEvents() {
+    setState(() {
+      _eventsFuture = _getAllEvents();
+    });
+  }
+
+  Future<List<dynamic>> _getAllEvents() async {
+    final eventNormals = await widget.isar.eventNormals.where().findAll();
+    final eventKeishas = await widget.isar.eventKeishas.where().findAll();
+    final events = [...eventNormals, ...eventKeishas];
+    events.sort((a, b) => a.date.compareTo(b.date));
+    return events;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<dynamic>>(
-      future: _getAllEvents(),
+      future: _eventsFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -30,24 +57,30 @@ class EventPage extends StatelessWidget {
                 final event = events[index];
                 if (event is EventNormal) {
                   return AnimationConfiguration.staggeredList(
-                      position: index,
-                      duration: const Duration(milliseconds: 375),
-                      child: SlideAnimation(
-                        verticalOffset: 50.0,
-                        child: FadeInAnimation(
-                          child: ListTileNormal(event: event),
+                    position: index,
+                    duration: const Duration(milliseconds: 375),
+                    child: SlideAnimation(
+                      verticalOffset: 50.0,
+                      child: FadeInAnimation(
+                        child: ListTileNormal(
+                          event: event,
+                          isar: widget.isar,
+                          onRefresh: _loadEvents, // 再読み込み用のコールバック
                         ),
-                      ));
+                      ),
+                    ),
+                  );
                 } else if (event is EventKeisha) {
                   return AnimationConfiguration.staggeredList(
-                      position: index,
-                      duration: const Duration(milliseconds: 375),
-                      child: SlideAnimation(
-                        verticalOffset: 50.0,
-                        child: FadeInAnimation(
-                          child: ListTileKeisha(event: event),
-                        ),
-                      ));
+                    position: index,
+                    duration: const Duration(milliseconds: 375),
+                    child: SlideAnimation(
+                      verticalOffset: 50.0,
+                      child: FadeInAnimation(
+                        child: ListTileKeisha(event: event),
+                      ),
+                    ),
+                  );
                 } else {
                   return const SizedBox.shrink();
                 }
@@ -57,13 +90,5 @@ class EventPage extends StatelessWidget {
         }
       },
     );
-  }
-
-  Future<List<dynamic>> _getAllEvents() async {
-    final eventNormals = await isar.eventNormals.where().findAll();
-    final eventKeishas = await isar.eventKeishas.where().findAll();
-    final events = [...eventNormals, ...eventKeishas];
-    events.sort((a, b) => a.date.compareTo(b.date));
-    return events;
   }
 }

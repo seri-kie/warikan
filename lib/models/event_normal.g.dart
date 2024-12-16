@@ -38,13 +38,23 @@ const EventNormalSchema = CollectionSchema(
       type: IsarType.string,
       enumMap: _EventNormalfractionEnumValueMap,
     ),
-    r'remainPeople': PropertySchema(
+    r'nameList': PropertySchema(
       id: 4,
+      name: r'nameList',
+      type: IsarType.stringList,
+    ),
+    r'payList': PropertySchema(
+      id: 5,
+      name: r'payList',
+      type: IsarType.boolList,
+    ),
+    r'remainPeople': PropertySchema(
+      id: 6,
       name: r'remainPeople',
       type: IsarType.long,
     ),
     r'remainPerPerson': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'remainPerPerson',
       type: IsarType.double,
     )
@@ -71,6 +81,14 @@ int _eventNormalEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.eventName.length * 3;
   bytesCount += 3 + object.fraction.name.length * 3;
+  bytesCount += 3 + object.nameList.length * 3;
+  {
+    for (var i = 0; i < object.nameList.length; i++) {
+      final value = object.nameList[i];
+      bytesCount += value.length * 3;
+    }
+  }
+  bytesCount += 3 + object.payList.length;
   return bytesCount;
 }
 
@@ -84,8 +102,10 @@ void _eventNormalSerialize(
   writer.writeDouble(offsets[1], object.difference);
   writer.writeString(offsets[2], object.eventName);
   writer.writeString(offsets[3], object.fraction.name);
-  writer.writeLong(offsets[4], object.remainPeople);
-  writer.writeDouble(offsets[5], object.remainPerPerson);
+  writer.writeStringList(offsets[4], object.nameList);
+  writer.writeBoolList(offsets[5], object.payList);
+  writer.writeLong(offsets[6], object.remainPeople);
+  writer.writeDouble(offsets[7], object.remainPerPerson);
 }
 
 EventNormal _eventNormalDeserialize(
@@ -100,11 +120,13 @@ EventNormal _eventNormalDeserialize(
     fraction:
         _EventNormalfractionValueEnumMap[reader.readStringOrNull(offsets[3])] ??
             FractionRound.none,
-    remainPeople: reader.readLong(offsets[4]),
-    remainPerPerson: reader.readDouble(offsets[5]),
+    remainPeople: reader.readLong(offsets[6]),
+    remainPerPerson: reader.readDouble(offsets[7]),
   );
   object.eventName = reader.readString(offsets[2]);
   object.id = id;
+  object.nameList = reader.readStringList(offsets[4]) ?? [];
+  object.payList = reader.readBoolList(offsets[5]) ?? [];
   return object;
 }
 
@@ -126,8 +148,12 @@ P _eventNormalDeserializeProp<P>(
               reader.readStringOrNull(offset)] ??
           FractionRound.none) as P;
     case 4:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringList(offset) ?? []) as P;
     case 5:
+      return (reader.readBoolList(offset) ?? []) as P;
+    case 6:
+      return (reader.readLong(offset)) as P;
+    case 7:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -682,6 +708,330 @@ extension EventNormalQueryFilter
   }
 
   QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'nameList',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'nameList',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'nameList',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'nameList',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'nameList',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'nameList',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListElementContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'nameList',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListElementMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'nameList',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'nameList',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'nameList',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameList',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameList',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameList',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameList',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameList',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      nameListLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameList',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      payListElementEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'payList',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      payListLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'payList',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      payListIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'payList',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      payListIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'payList',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      payListLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'payList',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      payListLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'payList',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
+      payListLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'payList',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QAfterFilterCondition>
       remainPeopleEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1004,6 +1354,18 @@ extension EventNormalQueryWhereDistinct
     });
   }
 
+  QueryBuilder<EventNormal, EventNormal, QDistinct> distinctByNameList() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'nameList');
+    });
+  }
+
+  QueryBuilder<EventNormal, EventNormal, QDistinct> distinctByPayList() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'payList');
+    });
+  }
+
   QueryBuilder<EventNormal, EventNormal, QDistinct> distinctByRemainPeople() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'remainPeople');
@@ -1048,6 +1410,18 @@ extension EventNormalQueryProperty
       fractionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'fraction');
+    });
+  }
+
+  QueryBuilder<EventNormal, List<String>, QQueryOperations> nameListProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'nameList');
+    });
+  }
+
+  QueryBuilder<EventNormal, List<bool>, QQueryOperations> payListProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'payList');
     });
   }
 
