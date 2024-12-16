@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:warikan/models/calc_slope.dart';
 import 'package:warikan/models/event_keisha.dart';
-import 'package:warikan/models/event_normal.dart';
 
 class EventDetailPageKeisha extends StatefulWidget {
   const EventDetailPageKeisha(
