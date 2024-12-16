@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 import 'package:warikan/pages/keisha_calculate_page/keisha_calculate_page.dart';
 import 'package:warikan/pages/normal_calculate_page/normal_calculate_page.dart';
 
 class CalculatePage extends StatelessWidget {
-  const CalculatePage({super.key});
+  const CalculatePage({super.key, required this.isar});
+
+  final Isar isar;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,10 @@ class CalculatePage extends StatelessWidget {
             ),
           ),
           body: TabBarView(
-            children: [NormalCalculatePage(), const KeishaCalculatePage()],
+            children: [
+              NormalCalculatePage(isar: isar),
+              KeishaCalculatePage(isar: isar),
+            ],
           ),
         ));
   }

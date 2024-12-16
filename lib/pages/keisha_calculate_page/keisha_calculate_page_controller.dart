@@ -1,15 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:warikan/models/calc_slope.dart';
 import 'package:warikan/models/keisha_group.dart';
 
 part 'keisha_calculate_page_controller.g.dart';
 part 'keisha_calculate_page_controller.freezed.dart';
-
-enum CalcSlope {
-  fit,
-  discount,
-  premium,
-}
 
 @freezed
 class KeishaCalculatePageState with _$KeishaCalculatePageState {

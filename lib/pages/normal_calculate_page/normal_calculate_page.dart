@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar/isar.dart';
+import 'package:warikan/models/event_normal.dart';
 import 'package:warikan/pages/normal_calculate_page/normal_calculate_page_controller.dart';
+import 'package:warikan/pages/normal_calculate_page/widgets/event_save_pop_up.dart';
 import 'package:warikan/pages/normal_calculate_page/widgets/result_container.dart';
 
 class NormalCalculatePage extends ConsumerWidget {
@@ -9,8 +12,9 @@ class NormalCalculatePage extends ConsumerWidget {
   Set<FractionRound> selected = {FractionRound.none};
   final TextEditingController totalAmountController = TextEditingController();
   final TextEditingController totalPeopleController = TextEditingController();
+  final Isar isar;
 
-  NormalCalculatePage({super.key});
+  NormalCalculatePage({super.key, required this.isar});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,6 +65,10 @@ class NormalCalculatePage extends ConsumerWidget {
             FractionRound.none)
           _fractionChoiceChips(ref),
         const ResultContainer(),
+        const SizedBox(
+          height: 20,
+        ),
+        eventSaveButton(context, ref),
       ],
     );
   }
@@ -199,6 +207,41 @@ class NormalCalculatePage extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget eventSaveButton(BuildContext context, WidgetRef ref) {
+    return SizedBox(
+      width: 200,
+      height: 55,
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            side: const BorderSide(color: Colors.white, width: 2.5),
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.green,
+          ),
+          onPressed: totalAmountController.text.isEmpty ||
+                  totalPeopleController.text.isEmpty
+              ? null
+              : () {
+                  final state = ref.read(normalCalculatePageControllerProvider);
+                  final eventNormal = EventNormal(
+                      remainPerPerson: state.divideResult,
+                      remainPeople: state.inputPeople,
+                      fraction: state.fraction,
+                      difference: state.difference,
+                      date: DateTime.now());
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return EventSavePopUp(
+                          isar: isar,
+                          event: eventNormal,
+                        );
+                      });
+                },
+          child: const Text('イベントを保存',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
     );
   }
 }

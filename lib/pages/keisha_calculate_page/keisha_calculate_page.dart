@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar/isar.dart';
+import 'package:warikan/models/calc_slope.dart';
+import 'package:warikan/models/event_keisha.dart';
+import 'package:warikan/models/keisha_group_for_isar.dart';
 import 'package:warikan/pages/keisha_calculate_page/keisha_calculate_page_controller.dart';
+import 'package:warikan/pages/keisha_calculate_page/widgets/event_save_pop_up_keisha.dart';
 import 'package:warikan/pages/keisha_calculate_page/widgets/result_container_keisha.dart';
 import 'package:warikan/pages/new_group_page/new_group_page.dart';
 
 class KeishaCalculatePage extends ConsumerWidget {
-  const KeishaCalculatePage({super.key});
+  KeishaCalculatePage({super.key, required this.isar});
+  final Isar isar;
+  final TextEditingController totalAmountController = TextEditingController();
+  final TextEditingController totalPeopleController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -102,7 +110,9 @@ class KeishaCalculatePage extends ConsumerWidget {
                 ]
               ],
             ),
-            const ResultContainerKeisha()
+            const ResultContainerKeisha(),
+            const SizedBox(height: 20),
+            eventSaveButton(context, ref),
           ],
         ),
       ),
@@ -128,6 +138,7 @@ class KeishaCalculatePage extends ConsumerWidget {
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         textInputAction: TextInputAction.next,
+        controller: totalAmountController,
         onFieldSubmitted: (value) {
           if (value.isEmpty) {
             return;
@@ -160,6 +171,7 @@ class KeishaCalculatePage extends ConsumerWidget {
       child: TextFormField(
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        controller: totalPeopleController,
         onFieldSubmitted: (value) {
           if (value.isEmpty) {
             return;
@@ -180,6 +192,49 @@ class KeishaCalculatePage extends ConsumerWidget {
               style: TextStyle(color: Colors.black),
             )),
       ),
+    );
+  }
+
+  Widget eventSaveButton(BuildContext context, WidgetRef ref) {
+    return SizedBox(
+      width: 200,
+      height: 55,
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            side: const BorderSide(color: Colors.white, width: 2.5),
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.green,
+          ),
+          onPressed: totalAmountController.text.isEmpty ||
+                  totalPeopleController.text.isEmpty
+              ? null
+              : () {
+                  final state = ref.read(keishaCalculatePageControllerProvider);
+                  final List<KeishaGroupForIsar> keishaGroups = [];
+                  for (final group in state.keishaGroups) {
+                    keishaGroups.add(KeishaGroupForIsar(
+                        groupName: group.groupName,
+                        totalAmount: group.totalAmount,
+                        totalPeople: group.totalPeople,
+                        calcSlope: group.calcSlope));
+                  }
+                  final eventKeisha = EventKeisha(
+                      keishaGroups: keishaGroups,
+                      remainPerPerson: state.divideResult,
+                      remainPeople: state.remainingPeople,
+                      allPeople: int.parse(totalPeopleController.text),
+                      date: DateTime.now());
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return EventSavePopUpKeisha(
+                          isar: isar,
+                          event: eventKeisha,
+                        );
+                      });
+                },
+          child: const Text('イベントを保存',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
     );
   }
 }
