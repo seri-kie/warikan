@@ -7,17 +7,29 @@ import 'package:warikan/pages/normal_calculate_page/normal_calculate_page_contro
 import 'package:warikan/pages/normal_calculate_page/widgets/event_save_pop_up.dart';
 import 'package:warikan/pages/normal_calculate_page/widgets/result_container.dart';
 
-class NormalCalculatePage extends ConsumerWidget {
-  final int fraction = 1;
-  Set<FractionRound> selected = {FractionRound.none};
-  final TextEditingController totalAmountController = TextEditingController();
-  final TextEditingController totalPeopleController = TextEditingController();
+class NormalCalculatePage extends ConsumerStatefulWidget {
   final Isar isar;
 
   NormalCalculatePage({super.key, required this.isar});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _NormalCalculatePageState createState() => _NormalCalculatePageState();
+}
+
+class _NormalCalculatePageState extends ConsumerState<NormalCalculatePage> {
+  final int fraction = 1;
+  Set<FractionRound> selected = {FractionRound.none};
+  final TextEditingController totalAmountController = TextEditingController();
+  final TextEditingController totalPeopleController = TextEditingController();
+  @override
+  void dispose() {
+    totalAmountController.dispose();
+    totalPeopleController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -82,7 +94,7 @@ class NormalCalculatePage extends ConsumerWidget {
         controller: totalAmountController,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         textInputAction: TextInputAction.next,
-        onFieldSubmitted: (value) {
+        onChanged: (value) {
           if (value.isEmpty) {
             return;
           }
@@ -116,7 +128,7 @@ class NormalCalculatePage extends ConsumerWidget {
         keyboardType: TextInputType.number,
         controller: totalPeopleController,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        onFieldSubmitted: (value) {
+        onChanged: (value) {
           if (value.isEmpty) {
             return;
           }
@@ -235,7 +247,7 @@ class NormalCalculatePage extends ConsumerWidget {
                       context: context,
                       builder: (context) {
                         return EventSavePopUp(
-                          isar: isar,
+                          isar: widget.isar,
                           event: eventNormal,
                         );
                       });

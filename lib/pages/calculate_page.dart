@@ -13,25 +13,30 @@ class CalculatePage extends StatelessWidget {
     return DefaultTabController(
         initialIndex: 0,
         length: 2,
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            title: const TabBar(
-              tabs: [
-                Tab(
-                  text: 'ノーマル割り勘',
-                ),
-                Tab(
-                  text: '傾斜割り勘',
-                )
+        child: GestureDetector(
+          onTap: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              title: const TabBar(
+                tabs: [
+                  Tab(
+                    text: 'ノーマル割り勘',
+                  ),
+                  Tab(
+                    text: '傾斜割り勘',
+                  )
+                ],
+              ),
+            ),
+            body: TabBarView(
+              children: [
+                NormalCalculatePage(isar: isar),
+                KeishaCalculatePage(isar: isar),
               ],
             ),
-          ),
-          body: TabBarView(
-            children: [
-              NormalCalculatePage(isar: isar),
-              KeishaCalculatePage(isar: isar),
-            ],
           ),
         ));
   }
