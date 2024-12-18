@@ -10,7 +10,7 @@ import 'package:warikan/pages/normal_calculate_page/widgets/result_container.dar
 class NormalCalculatePage extends ConsumerStatefulWidget {
   final Isar isar;
 
-  NormalCalculatePage({super.key, required this.isar});
+  const NormalCalculatePage({super.key, required this.isar});
 
   @override
   _NormalCalculatePageState createState() => _NormalCalculatePageState();
@@ -21,6 +21,7 @@ class _NormalCalculatePageState extends ConsumerState<NormalCalculatePage> {
   Set<FractionRound> selected = {FractionRound.none};
   final TextEditingController totalAmountController = TextEditingController();
   final TextEditingController totalPeopleController = TextEditingController();
+
   @override
   void dispose() {
     totalAmountController.dispose();

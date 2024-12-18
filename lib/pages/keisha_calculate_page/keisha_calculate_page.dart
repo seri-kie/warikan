@@ -10,18 +10,32 @@ import 'package:warikan/pages/keisha_calculate_page/widgets/event_save_pop_up_ke
 import 'package:warikan/pages/keisha_calculate_page/widgets/result_container_keisha.dart';
 import 'package:warikan/pages/new_group_page/new_group_page.dart';
 
-class KeishaCalculatePage extends ConsumerWidget {
-  KeishaCalculatePage({super.key, required this.isar});
+class KeishaCalculatePage extends ConsumerStatefulWidget {
   final Isar isar;
-  final TextEditingController totalAmountController = TextEditingController();
-  final TextEditingController totalPeopleController = TextEditingController();
+
+  const KeishaCalculatePage({super.key, required this.isar});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _KeishaCalculatePageState createState() => _KeishaCalculatePageState();
+}
+
+class _KeishaCalculatePageState extends ConsumerState<KeishaCalculatePage> {
+  final TextEditingController totalAmountController = TextEditingController();
+  final TextEditingController totalPeopleController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    totalAmountController.dispose();
+    totalPeopleController.dispose();
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final keishaGroups =
         ref.watch(keishaCalculatePageControllerProvider).keishaGroups;
-
-    final ScrollController scrollController = ScrollController();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -139,7 +153,7 @@ class KeishaCalculatePage extends ConsumerWidget {
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         textInputAction: TextInputAction.next,
         controller: totalAmountController,
-        onFieldSubmitted: (value) {
+        onChanged: (value) {
           if (value.isEmpty) {
             return;
           }
@@ -172,7 +186,7 @@ class KeishaCalculatePage extends ConsumerWidget {
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         controller: totalPeopleController,
-        onFieldSubmitted: (value) {
+        onChanged: (value) {
           if (value.isEmpty) {
             return;
           }
@@ -228,7 +242,7 @@ class KeishaCalculatePage extends ConsumerWidget {
                       context: context,
                       builder: (context) {
                         return EventSavePopUpKeisha(
-                          isar: isar,
+                          isar: widget.isar,
                           event: eventKeisha,
                         );
                       });
