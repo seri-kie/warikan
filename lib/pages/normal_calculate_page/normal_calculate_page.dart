@@ -7,6 +7,7 @@ import 'package:warikan/models/event_normal.dart';
 import 'package:warikan/pages/normal_calculate_page/normal_calculate_page_controller.dart';
 import 'package:warikan/pages/normal_calculate_page/widgets/event_save_pop_up.dart';
 import 'package:warikan/pages/normal_calculate_page/widgets/result_container.dart';
+import 'package:warikan/pages/utils/keyboard_config.dart';
 
 class NormalCalculatePage extends ConsumerStatefulWidget {
   final Isar isar;
@@ -25,43 +26,6 @@ class _NormalCalculatePageState extends ConsumerState<NormalCalculatePage> {
   final FocusNode focusNodeAmount = FocusNode();
   final FocusNode focusNodePeople = FocusNode();
 
-  KeyboardActionsConfig config() {
-    return KeyboardActionsConfig(
-      keyboardActionsPlatform: KeyboardActionsPlatform.IOS,
-      nextFocus: true,
-      actions: [
-        KeyboardActionsItem(
-          focusNode: focusNodeAmount,
-          toolbarButtons: [
-            (node) {
-              return GestureDetector(
-                onTap: () => node.unfocus(),
-                child: const Padding(
-                  padding: EdgeInsets.only(right: 15.0),
-                  child: Text('閉じる'),
-                ),
-              );
-            }
-          ],
-        ),
-        KeyboardActionsItem(
-          focusNode: focusNodePeople,
-          toolbarButtons: [
-            (node) {
-              return GestureDetector(
-                onTap: () => node.unfocus(),
-                child: const Padding(
-                  padding: EdgeInsets.only(right: 15.0),
-                  child: Text('閉じる'),
-                ),
-              );
-            }
-          ],
-        ),
-      ],
-    );
-  }
-
   @override
   void dispose() {
     totalAmountController.dispose();
@@ -73,8 +37,10 @@ class _NormalCalculatePageState extends ConsumerState<NormalCalculatePage> {
 
   @override
   Widget build(BuildContext context) {
+    final config = buildKeyboardConfig(
+        focusNodeAmount: focusNodeAmount, focusNodePeople: focusNodePeople);
     return KeyboardActions(
-      config: config(),
+      config: config,
       child: Column(
         children: [
           Row(

@@ -5,7 +5,7 @@ import 'package:warikan/pages/normal_calculate_page/normal_calculate_page.dart';
 import 'package:warikan/pages/widgets/un_focus.dart';
 
 class CalculatePage extends StatefulWidget {
-  const CalculatePage({Key? key, required this.isar}) : super(key: key);
+  const CalculatePage({super.key, required this.isar});
 
   final Isar isar;
 
