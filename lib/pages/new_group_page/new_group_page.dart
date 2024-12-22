@@ -31,184 +31,190 @@ class _NewGroupPageState extends State<NewGroupPage> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
-        return Scaffold(
-          appBar: AppBar(
-            foregroundColor: Colors.white,
-            title: const Text(
-              '新規グループ作成',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            backgroundColor: const Color(0xFF198D34),
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-                ref
-                    .read(keishaCalculatePageControllerProvider.notifier)
-                    .divide();
-              },
-            ),
-          ),
-          body: Column(
-            children: [
-              const SizedBox(
-                height: 15,
+        return GestureDetector(
+          onTap: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              foregroundColor: Colors.white,
+              title: const Text(
+                '新規グループ作成',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              const Text('傾斜方法'),
-              Center(
-                child: SegmentedButton<CalcSlope>(
-                    onSelectionChanged: (value) {
-                      setState(() {
-                        selected = value;
-                      });
-                    },
-                    style: SegmentedButton.styleFrom(
-                        backgroundColor: Colors.grey[350],
-                        selectedBackgroundColor:
-                            const Color.fromARGB(255, 104, 245, 172)),
-                    segments: const [
-                      ButtonSegment(
-                          value: CalcSlope.fit,
-                          label: Text(
-                            'キリよく',
-                          )),
-                      ButtonSegment(
-                          value: CalcSlope.discount,
-                          label: Text(
-                            '割り引き',
-                          )),
-                      ButtonSegment(
-                          value: CalcSlope.premium,
-                          label: Text(
-                            '割り増し',
-                          ))
-                    ],
-                    selected: selected),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Center(
-                child: SizedBox(
-                  width: 300,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _inputGroupName(),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        children: [
-                          _inputTotalPeople(ref),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            selected.contains(CalcSlope.fit)
-                                ? 'はキリよく'
-                                : selected.contains(CalcSlope.discount)
-                                    ? 'は割り引き'
-                                    : 'は割り増し',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        children: [
-                          _inputTotalAmount(),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          const Text(
-                            'で！',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              //　グループ追加ボタンを押したらKeishaGroupのインタンスを作成して追加する
-              InkWell(
-                customBorder: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0), // リップルを角丸に
-                ),
-                onTap: () {
-                  // 一つでも入力ミスがあればreturn
-                  bool inputError = false;
-                  // 人数のチェック
-                  if (totalPeople <= 0) {
-                    setState(() {
-                      hasPeople = false;
-                    });
-                    inputError = true;
-                  } else {
-                    hasPeople = true;
-                  }
-                  if (!ref
-                      .read(keishaCalculatePageControllerProvider.notifier)
-                      .canAddGroup(totalPeople)) {
-                    setState(() {
-                      canAddPeople = false;
-                    });
-                    inputError = true;
-                  } else {
-                    canAddPeople = true;
-                  }
-                  // グループ名のチェック
-                  if (groupName.isEmpty) {
-                    setState(() {
-                      hasGroupName = false;
-                    });
-                    inputError = true;
-                  } else {
-                    hasGroupName = true;
-                  }
-                  // 金額のチェック
-                  if (amount < 0) {
-                    setState(() {
-                      hasAmount = false;
-                    });
-                    inputError = true;
-                  } else {
-                    hasAmount = true;
-                  }
-                  if (inputError) {
-                    return;
-                  }
-                  final keishaGroup = KeishaGroup(
-                      groupName: groupName,
-                      totalPeople: totalPeople,
-                      totalAmount: amount,
-                      calcSlope: selected.first);
+              backgroundColor: const Color(0xFF198D34),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
                   ref
                       .read(keishaCalculatePageControllerProvider.notifier)
-                      .addGroup(keishaGroup);
-                  groupNameController.clear();
-                  totalPeopleController.clear();
-                  amountController.clear();
-                  // グループ追加完了のメッセージを表示
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('グループが追加されました')),
-                  );
+                      .divide();
                 },
-                child: Image.asset(
-                  Assets.images.groupAddButton.path,
-                  height: 75, // ボタンの高さを指定
-                  fit: BoxFit.fitHeight, // 画像をボタンサイズにフィット
+              ),
+            ),
+            body: Column(
+              children: [
+                const SizedBox(
+                  height: 15,
                 ),
-              )
-            ],
+                const Text('傾斜方法'),
+                Center(
+                  child: SegmentedButton<CalcSlope>(
+                      onSelectionChanged: (value) {
+                        setState(() {
+                          selected = value;
+                        });
+                      },
+                      style: SegmentedButton.styleFrom(
+                          backgroundColor: Colors.grey[350],
+                          selectedBackgroundColor:
+                              const Color.fromARGB(255, 104, 245, 172)),
+                      segments: const [
+                        ButtonSegment(
+                            value: CalcSlope.fit,
+                            label: Text(
+                              'キリよく',
+                            )),
+                        ButtonSegment(
+                            value: CalcSlope.discount,
+                            label: Text(
+                              '割り引き',
+                            )),
+                        ButtonSegment(
+                            value: CalcSlope.premium,
+                            label: Text(
+                              '割り増し',
+                            ))
+                      ],
+                      selected: selected),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Center(
+                  child: SizedBox(
+                    width: 300,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _inputGroupName(),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          children: [
+                            _inputTotalPeople(ref),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              selected.contains(CalcSlope.fit)
+                                  ? 'はキリよく'
+                                  : selected.contains(CalcSlope.discount)
+                                      ? 'は割り引き'
+                                      : 'は割り増し',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          children: [
+                            _inputTotalAmount(),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            const Text(
+                              'で！',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                //　グループ追加ボタンを押したらKeishaGroupのインタンスを作成して追加する
+                InkWell(
+                  customBorder: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0), // リップルを角丸に
+                  ),
+                  onTap: () {
+                    // 一つでも入力ミスがあればreturn
+                    bool inputError = false;
+                    // 人数のチェック
+                    if (totalPeople <= 0) {
+                      setState(() {
+                        hasPeople = false;
+                      });
+                      inputError = true;
+                    } else {
+                      hasPeople = true;
+                    }
+                    if (!ref
+                        .read(keishaCalculatePageControllerProvider.notifier)
+                        .canAddGroup(totalPeople)) {
+                      setState(() {
+                        canAddPeople = false;
+                      });
+                      inputError = true;
+                    } else {
+                      canAddPeople = true;
+                    }
+                    // グループ名のチェック
+                    if (groupName.isEmpty) {
+                      setState(() {
+                        hasGroupName = false;
+                      });
+                      inputError = true;
+                    } else {
+                      hasGroupName = true;
+                    }
+                    // 金額のチェック
+                    if (amount < 0) {
+                      setState(() {
+                        hasAmount = false;
+                      });
+                      inputError = true;
+                    } else {
+                      hasAmount = true;
+                    }
+                    if (inputError) {
+                      return;
+                    }
+                    final keishaGroup = KeishaGroup(
+                        groupName: groupName,
+                        totalPeople: totalPeople,
+                        totalAmount: amount,
+                        calcSlope: selected.first);
+                    ref
+                        .read(keishaCalculatePageControllerProvider.notifier)
+                        .addGroup(keishaGroup);
+                    groupNameController.clear();
+                    totalPeopleController.clear();
+                    amountController.clear();
+                    // グループ追加完了のメッセージを表示
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('グループが追加されました')),
+                    );
+                  },
+                  child: Image.asset(
+                    Assets.images.groupAddButton.path,
+                    height: 75, // ボタンの高さを指定
+                    fit: BoxFit.fitHeight, // 画像をボタンサイズにフィット
+                  ),
+                )
+              ],
+            ),
           ),
         );
       },

@@ -161,6 +161,7 @@ class _EventDetailPageNormalState extends State<EventDetailPageNormal> {
                     : '過不足:${widget.event.difference.toStringAsFixed(3)}円$difference',
                 style: const TextStyle(fontSize: 18),
               ),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

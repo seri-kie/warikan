@@ -2,74 +2,100 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:warikan/models/event_normal.dart';
 import 'package:warikan/pages/normal_calculate_page/normal_calculate_page_controller.dart';
 import 'package:warikan/pages/normal_calculate_page/widgets/event_save_pop_up.dart';
 import 'package:warikan/pages/normal_calculate_page/widgets/result_container.dart';
+import 'package:warikan/pages/utils/keyboard_config.dart';
 
-class NormalCalculatePage extends ConsumerWidget {
+class NormalCalculatePage extends ConsumerStatefulWidget {
+  final Isar isar;
+
+  const NormalCalculatePage({super.key, required this.isar});
+
+  @override
+  _NormalCalculatePageState createState() => _NormalCalculatePageState();
+}
+
+class _NormalCalculatePageState extends ConsumerState<NormalCalculatePage> {
   final int fraction = 1;
   Set<FractionRound> selected = {FractionRound.none};
   final TextEditingController totalAmountController = TextEditingController();
   final TextEditingController totalPeopleController = TextEditingController();
-  final Isar isar;
-
-  NormalCalculatePage({super.key, required this.isar});
+  final FocusNode focusNodeAmount = FocusNode();
+  final FocusNode focusNodePeople = FocusNode();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            _inputTotalAmount(context, ref),
-            Expanded(child: _inputTotalPeople(context, ref)),
-          ],
-        ),
-        const Text(
-          '端数処理',
-        ),
-        SegmentedButton<FractionRound>(
-            onSelectionChanged: (value) {
-              selected = value;
-              ref
-                  .read(normalCalculatePageControllerProvider.notifier)
-                  .setFraction(selected.contains(FractionRound.none)
-                      ? FractionRound.none
-                      : selected.first);
-              ref.read(normalCalculatePageControllerProvider.notifier).divide();
-            },
-            style: SegmentedButton.styleFrom(
-                backgroundColor: Colors.grey[350],
-                selectedBackgroundColor:
-                    const Color.fromARGB(255, 104, 245, 172)),
-            segments: const [
-              ButtonSegment(
-                  value: FractionRound.none,
-                  label: Text(
-                    '処理なし',
-                  )),
-              ButtonSegment(
-                  value: FractionRound.roundUp,
-                  label: Text(
-                    '切り上げ',
-                  )),
-              ButtonSegment(
-                  value: FractionRound.roundDown,
-                  label: Text(
-                    '切り下げ',
-                  ))
+  void dispose() {
+    totalAmountController.dispose();
+    totalPeopleController.dispose();
+    focusNodeAmount.dispose();
+    focusNodePeople.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final config = buildKeyboardConfig(
+        focusNodeAmount: focusNodeAmount, focusNodePeople: focusNodePeople);
+    return KeyboardActions(
+      config: config,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              _inputTotalAmount(context, ref),
+              Expanded(child: _inputTotalPeople(context, ref)),
             ],
-            selected: selected),
-        if (ref.watch(normalCalculatePageControllerProvider).fraction !=
-            FractionRound.none)
-          _fractionChoiceChips(ref),
-        const ResultContainer(),
-        const SizedBox(
-          height: 20,
-        ),
-        eventSaveButton(context, ref),
-      ],
+          ),
+          const Text(
+            '端数処理',
+          ),
+          SegmentedButton<FractionRound>(
+              onSelectionChanged: (value) {
+                selected = value;
+                ref
+                    .read(normalCalculatePageControllerProvider.notifier)
+                    .setFraction(selected.contains(FractionRound.none)
+                        ? FractionRound.none
+                        : selected.first);
+                ref
+                    .read(normalCalculatePageControllerProvider.notifier)
+                    .divide();
+              },
+              style: SegmentedButton.styleFrom(
+                  backgroundColor: Colors.grey[350],
+                  selectedBackgroundColor:
+                      const Color.fromARGB(255, 104, 245, 172)),
+              segments: const [
+                ButtonSegment(
+                    value: FractionRound.none,
+                    label: Text(
+                      '処理なし',
+                    )),
+                ButtonSegment(
+                    value: FractionRound.roundUp,
+                    label: Text(
+                      '切り上げ',
+                    )),
+                ButtonSegment(
+                    value: FractionRound.roundDown,
+                    label: Text(
+                      '切り下げ',
+                    ))
+              ],
+              selected: selected),
+          if (ref.watch(normalCalculatePageControllerProvider).fraction !=
+              FractionRound.none)
+            _fractionChoiceChips(ref),
+          const ResultContainer(),
+          const SizedBox(
+            height: 20,
+          ),
+          eventSaveButton(context, ref),
+        ],
+      ),
     );
   }
 
@@ -78,11 +104,12 @@ class NormalCalculatePage extends ConsumerWidget {
       margin: const EdgeInsets.all(20),
       width: MediaQuery.of(context).size.width * 0.55,
       child: TextFormField(
+        focusNode: focusNodeAmount,
         keyboardType: TextInputType.number,
         controller: totalAmountController,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         textInputAction: TextInputAction.next,
-        onFieldSubmitted: (value) {
+        onChanged: (value) {
           if (value.isEmpty) {
             return;
           }
@@ -113,10 +140,11 @@ class NormalCalculatePage extends ConsumerWidget {
       margin: const EdgeInsets.only(right: 15),
       width: MediaQuery.of(context).size.width * 0.55,
       child: TextFormField(
+        focusNode: focusNodePeople,
         keyboardType: TextInputType.number,
         controller: totalPeopleController,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        onFieldSubmitted: (value) {
+        onChanged: (value) {
           if (value.isEmpty) {
             return;
           }
@@ -235,7 +263,7 @@ class NormalCalculatePage extends ConsumerWidget {
                       context: context,
                       builder: (context) {
                         return EventSavePopUp(
-                          isar: isar,
+                          isar: widget.isar,
                           event: eventNormal,
                         );
                       });

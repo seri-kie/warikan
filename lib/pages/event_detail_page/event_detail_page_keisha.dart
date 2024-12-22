@@ -153,6 +153,7 @@ class _EventDetailPageKeishaState extends State<EventDetailPageKeisha> {
               '日付: $formattedDate',
               style: const TextStyle(fontSize: 18),
             ),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -168,7 +169,7 @@ class _EventDetailPageKeishaState extends State<EventDetailPageKeisha> {
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.lightGreen,
+                    backgroundColor: Colors.lightBlue,
                     foregroundColor: Colors.white,
                   ),
                   child: const Text(
