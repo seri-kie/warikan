@@ -22,6 +22,7 @@ mixin _$NormalCalculatePageState {
   double get divideResult => throw _privateConstructorUsedError;
   int get fractionPrice => throw _privateConstructorUsedError;
   double get difference => throw _privateConstructorUsedError;
+  Isar get isar => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $NormalCalculatePageStateCopyWith<NormalCalculatePageState> get copyWith =>
@@ -40,7 +41,8 @@ abstract class $NormalCalculatePageStateCopyWith<$Res> {
       FractionRound fraction,
       double divideResult,
       int fractionPrice,
-      double difference});
+      double difference,
+      Isar isar});
 }
 
 /// @nodoc
@@ -63,6 +65,7 @@ class _$NormalCalculatePageStateCopyWithImpl<$Res,
     Object? divideResult = null,
     Object? fractionPrice = null,
     Object? difference = null,
+    Object? isar = null,
   }) {
     return _then(_value.copyWith(
       inputTotal: null == inputTotal
@@ -89,6 +92,10 @@ class _$NormalCalculatePageStateCopyWithImpl<$Res,
           ? _value.difference
           : difference // ignore: cast_nullable_to_non_nullable
               as double,
+      isar: null == isar
+          ? _value.isar
+          : isar // ignore: cast_nullable_to_non_nullable
+              as Isar,
     ) as $Val);
   }
 }
@@ -108,7 +115,8 @@ abstract class _$$NormalCalculatePageStateImplCopyWith<$Res>
       FractionRound fraction,
       double divideResult,
       int fractionPrice,
-      double difference});
+      double difference,
+      Isar isar});
 }
 
 /// @nodoc
@@ -130,6 +138,7 @@ class __$$NormalCalculatePageStateImplCopyWithImpl<$Res>
     Object? divideResult = null,
     Object? fractionPrice = null,
     Object? difference = null,
+    Object? isar = null,
   }) {
     return _then(_$NormalCalculatePageStateImpl(
       inputTotal: null == inputTotal
@@ -156,6 +165,10 @@ class __$$NormalCalculatePageStateImplCopyWithImpl<$Res>
           ? _value.difference
           : difference // ignore: cast_nullable_to_non_nullable
               as double,
+      isar: null == isar
+          ? _value.isar
+          : isar // ignore: cast_nullable_to_non_nullable
+              as Isar,
     ));
   }
 }
@@ -169,7 +182,8 @@ class _$NormalCalculatePageStateImpl implements _NormalCalculatePageState {
       required this.fraction,
       required this.divideResult,
       required this.fractionPrice,
-      required this.difference});
+      required this.difference,
+      required this.isar});
 
   @override
   final int inputTotal;
@@ -183,10 +197,12 @@ class _$NormalCalculatePageStateImpl implements _NormalCalculatePageState {
   final int fractionPrice;
   @override
   final double difference;
+  @override
+  final Isar isar;
 
   @override
   String toString() {
-    return 'NormalCalculatePageState(inputTotal: $inputTotal, inputPeople: $inputPeople, fraction: $fraction, divideResult: $divideResult, fractionPrice: $fractionPrice, difference: $difference)';
+    return 'NormalCalculatePageState(inputTotal: $inputTotal, inputPeople: $inputPeople, fraction: $fraction, divideResult: $divideResult, fractionPrice: $fractionPrice, difference: $difference, isar: $isar)';
   }
 
   @override
@@ -205,12 +221,13 @@ class _$NormalCalculatePageStateImpl implements _NormalCalculatePageState {
             (identical(other.fractionPrice, fractionPrice) ||
                 other.fractionPrice == fractionPrice) &&
             (identical(other.difference, difference) ||
-                other.difference == difference));
+                other.difference == difference) &&
+            (identical(other.isar, isar) || other.isar == isar));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, inputTotal, inputPeople,
-      fraction, divideResult, fractionPrice, difference);
+      fraction, divideResult, fractionPrice, difference, isar);
 
   @JsonKey(ignore: true)
   @override
@@ -227,7 +244,8 @@ abstract class _NormalCalculatePageState implements NormalCalculatePageState {
       required final FractionRound fraction,
       required final double divideResult,
       required final int fractionPrice,
-      required final double difference}) = _$NormalCalculatePageStateImpl;
+      required final double difference,
+      required final Isar isar}) = _$NormalCalculatePageStateImpl;
 
   @override
   int get inputTotal;
@@ -241,6 +259,8 @@ abstract class _NormalCalculatePageState implements NormalCalculatePageState {
   int get fractionPrice;
   @override
   double get difference;
+  @override
+  Isar get isar;
   @override
   @JsonKey(ignore: true)
   _$$NormalCalculatePageStateImplCopyWith<_$NormalCalculatePageStateImpl>

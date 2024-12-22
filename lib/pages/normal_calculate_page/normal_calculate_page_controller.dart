@@ -1,5 +1,8 @@
+import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:warikan/models/event_keisha.dart';
+import 'package:warikan/models/event_normal.dart';
 
 part 'normal_calculate_page_controller.g.dart';
 part 'normal_calculate_page_controller.freezed.dart';
@@ -14,7 +17,8 @@ class NormalCalculatePageState with _$NormalCalculatePageState {
     required FractionRound fraction,
     required double divideResult,
     required int fractionPrice,
-    required double difference, // differenceフィールドを追加
+    required double difference,
+    required Isar isar,
   }) = _NormalCalculatePageState;
 }
 
@@ -22,14 +26,14 @@ class NormalCalculatePageState with _$NormalCalculatePageState {
 class NormalCalculatePageController extends _$NormalCalculatePageController {
   @override
   NormalCalculatePageState build() {
-    return const NormalCalculatePageState(
-      inputTotal: 0,
-      inputPeople: -1,
-      fraction: FractionRound.none,
-      divideResult: 0.0,
-      fractionPrice: 1,
-      difference: 0.0, // 初期値を設定
-    );
+    return NormalCalculatePageState(
+        inputTotal: 0,
+        inputPeople: -1,
+        fraction: FractionRound.none,
+        divideResult: 0.0,
+        fractionPrice: 1,
+        difference: 0.0, // 初期値を設定
+        isar: Isar.getInstance()!);
   }
 
   void setInputTotal(int value) {
@@ -74,14 +78,21 @@ class NormalCalculatePageController extends _$NormalCalculatePageController {
     }
   }
 
+  Future<int> getEventCount() async {
+    final eventCountNormal = await state.isar.eventNormals.count();
+    final eventCountKeisha = await state.isar.eventKeishas.count();
+    return eventCountNormal + eventCountKeisha;
+  }
+
   void reset() {
-    state = const NormalCalculatePageState(
+    state = NormalCalculatePageState(
       inputTotal: 0,
       inputPeople: -1,
       fraction: FractionRound.none,
       divideResult: 0.0,
       fractionPrice: 1,
       difference: 0.0,
+      isar: Isar.getInstance()!,
     );
   }
 }

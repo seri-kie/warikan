@@ -23,6 +23,7 @@ mixin _$KeishaCalculatePageState {
   int get remainingPeople => throw _privateConstructorUsedError;
   int get groupPeople => throw _privateConstructorUsedError;
   List<KeishaGroup> get keishaGroups => throw _privateConstructorUsedError;
+  Isar get isar => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $KeishaCalculatePageStateCopyWith<KeishaCalculatePageState> get copyWith =>
@@ -42,7 +43,8 @@ abstract class $KeishaCalculatePageStateCopyWith<$Res> {
       int remainingAmount,
       int remainingPeople,
       int groupPeople,
-      List<KeishaGroup> keishaGroups});
+      List<KeishaGroup> keishaGroups,
+      Isar isar});
 }
 
 /// @nodoc
@@ -66,6 +68,7 @@ class _$KeishaCalculatePageStateCopyWithImpl<$Res,
     Object? remainingPeople = null,
     Object? groupPeople = null,
     Object? keishaGroups = null,
+    Object? isar = null,
   }) {
     return _then(_value.copyWith(
       inputTotal: null == inputTotal
@@ -96,6 +99,10 @@ class _$KeishaCalculatePageStateCopyWithImpl<$Res,
           ? _value.keishaGroups
           : keishaGroups // ignore: cast_nullable_to_non_nullable
               as List<KeishaGroup>,
+      isar: null == isar
+          ? _value.isar
+          : isar // ignore: cast_nullable_to_non_nullable
+              as Isar,
     ) as $Val);
   }
 }
@@ -116,7 +123,8 @@ abstract class _$$KeishaCalculatePageStateImplCopyWith<$Res>
       int remainingAmount,
       int remainingPeople,
       int groupPeople,
-      List<KeishaGroup> keishaGroups});
+      List<KeishaGroup> keishaGroups,
+      Isar isar});
 }
 
 /// @nodoc
@@ -139,6 +147,7 @@ class __$$KeishaCalculatePageStateImplCopyWithImpl<$Res>
     Object? remainingPeople = null,
     Object? groupPeople = null,
     Object? keishaGroups = null,
+    Object? isar = null,
   }) {
     return _then(_$KeishaCalculatePageStateImpl(
       inputTotal: null == inputTotal
@@ -169,6 +178,10 @@ class __$$KeishaCalculatePageStateImplCopyWithImpl<$Res>
           ? _value._keishaGroups
           : keishaGroups // ignore: cast_nullable_to_non_nullable
               as List<KeishaGroup>,
+      isar: null == isar
+          ? _value.isar
+          : isar // ignore: cast_nullable_to_non_nullable
+              as Isar,
     ));
   }
 }
@@ -183,7 +196,8 @@ class _$KeishaCalculatePageStateImpl implements _KeishaCalculatePageState {
       required this.remainingAmount,
       required this.remainingPeople,
       required this.groupPeople,
-      required final List<KeishaGroup> keishaGroups})
+      required final List<KeishaGroup> keishaGroups,
+      required this.isar})
       : _keishaGroups = keishaGroups;
 
   @override
@@ -207,8 +221,11 @@ class _$KeishaCalculatePageStateImpl implements _KeishaCalculatePageState {
   }
 
   @override
+  final Isar isar;
+
+  @override
   String toString() {
-    return 'KeishaCalculatePageState(inputTotal: $inputTotal, inputPeople: $inputPeople, divideResult: $divideResult, remainingAmount: $remainingAmount, remainingPeople: $remainingPeople, groupPeople: $groupPeople, keishaGroups: $keishaGroups)';
+    return 'KeishaCalculatePageState(inputTotal: $inputTotal, inputPeople: $inputPeople, divideResult: $divideResult, remainingAmount: $remainingAmount, remainingPeople: $remainingPeople, groupPeople: $groupPeople, keishaGroups: $keishaGroups, isar: $isar)';
   }
 
   @override
@@ -229,7 +246,8 @@ class _$KeishaCalculatePageStateImpl implements _KeishaCalculatePageState {
             (identical(other.groupPeople, groupPeople) ||
                 other.groupPeople == groupPeople) &&
             const DeepCollectionEquality()
-                .equals(other._keishaGroups, _keishaGroups));
+                .equals(other._keishaGroups, _keishaGroups) &&
+            (identical(other.isar, isar) || other.isar == isar));
   }
 
   @override
@@ -241,7 +259,8 @@ class _$KeishaCalculatePageStateImpl implements _KeishaCalculatePageState {
       remainingAmount,
       remainingPeople,
       groupPeople,
-      const DeepCollectionEquality().hash(_keishaGroups));
+      const DeepCollectionEquality().hash(_keishaGroups),
+      isar);
 
   @JsonKey(ignore: true)
   @override
@@ -253,14 +272,14 @@ class _$KeishaCalculatePageStateImpl implements _KeishaCalculatePageState {
 
 abstract class _KeishaCalculatePageState implements KeishaCalculatePageState {
   const factory _KeishaCalculatePageState(
-          {required final int inputTotal,
-          required final int inputPeople,
-          required final double divideResult,
-          required final int remainingAmount,
-          required final int remainingPeople,
-          required final int groupPeople,
-          required final List<KeishaGroup> keishaGroups}) =
-      _$KeishaCalculatePageStateImpl;
+      {required final int inputTotal,
+      required final int inputPeople,
+      required final double divideResult,
+      required final int remainingAmount,
+      required final int remainingPeople,
+      required final int groupPeople,
+      required final List<KeishaGroup> keishaGroups,
+      required final Isar isar}) = _$KeishaCalculatePageStateImpl;
 
   @override
   int get inputTotal;
@@ -276,6 +295,8 @@ abstract class _KeishaCalculatePageState implements KeishaCalculatePageState {
   int get groupPeople;
   @override
   List<KeishaGroup> get keishaGroups;
+  @override
+  Isar get isar;
   @override
   @JsonKey(ignore: true)
   _$$KeishaCalculatePageStateImplCopyWith<_$KeishaCalculatePageStateImpl>
