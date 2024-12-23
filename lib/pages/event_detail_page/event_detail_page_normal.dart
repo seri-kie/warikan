@@ -68,6 +68,7 @@ class _EventDetailPageNormalState extends State<EventDetailPageNormal> {
             : '余り';
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
           widget.event.eventName,
@@ -122,73 +123,76 @@ class _EventDetailPageNormalState extends State<EventDetailPageNormal> {
         backgroundColor: Colors.lightGreen,
         foregroundColor: Colors.white,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'イベント名: ${widget.event.eventName}',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              widget.event.remainPerPerson % 1 == 0 // 整数の場合
-                  ? '1人あたり:${widget.event.remainPerPerson.toStringAsFixed(0)}円'
-                  : '1人あたり:${widget.event.remainPerPerson.toStringAsFixed(3)}円',
-              style: const TextStyle(fontSize: 20),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              '人数: ${widget.event.remainPeople}人',
-              style: const TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              '日付: $formattedDate',
-              style: const TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              '端数: $fraction',
-              style: const TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 10),
-            if (widget.event.difference != 0)
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                widget.event.difference % 1 == 0 // 整数の場合
-                    ? '過不足:${widget.event.difference.toStringAsFixed(0)}円$difference'
-                    : '過不足:${widget.event.difference.toStringAsFixed(3)}円$difference',
+                'イベント名: ${widget.event.eventName}',
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                widget.event.remainPerPerson % 1 == 0 // 整数の場合
+                    ? '1人あたり:${widget.event.remainPerPerson.toStringAsFixed(0)}円'
+                    : '1人あたり:${widget.event.remainPerPerson.toStringAsFixed(3)}円',
+                style: const TextStyle(fontSize: 20),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                '人数: ${widget.event.remainPeople}人',
                 style: const TextStyle(fontSize: 18),
               ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('・回収チェックリスト', style: TextStyle(fontSize: 18)),
-                // 保存ボタン
-                ElevatedButton(
-                  onPressed: _isChanged
-                      ? () async {
-                          await _updateEventData();
-                          setState(() {
-                            _isChanged = false; // 保存後はボタンを無効に
-                          });
-                        }
-                      : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.lightGreen,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text(
-                    '保存',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+              const SizedBox(height: 10),
+              Text(
+                '端数: $fraction',
+                style: const TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 10),
+              if (widget.event.difference != 0)
+                Text(
+                  widget.event.difference % 1 == 0 // 整数の場合
+                      ? '過不足:${widget.event.difference.toStringAsFixed(0)}円$difference'
+                      : '過不足:${widget.event.difference.toStringAsFixed(3)}円$difference',
+                  style: const TextStyle(fontSize: 18),
                 ),
-              ],
-            ),
-            Expanded(
-              child: ListView.builder(
+              const SizedBox(height: 10),
+              Text(
+                '日付: $formattedDate',
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('・回収チェックリスト', style: TextStyle(fontSize: 18)),
+                  // 保存ボタン
+                  ElevatedButton(
+                    onPressed: _isChanged
+                        ? () async {
+                            await _updateEventData();
+                            setState(() {
+                              _isChanged = false; // 保存後はボタンを無効に
+                            });
+                          }
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.lightGreen,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text(
+                      '保存',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+              ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
                 itemCount: widget.event.remainPeople,
                 itemBuilder: (context, index) {
                   return Row(
@@ -217,8 +221,8 @@ class _EventDetailPageNormalState extends State<EventDetailPageNormal> {
                   );
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

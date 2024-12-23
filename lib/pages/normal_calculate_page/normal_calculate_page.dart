@@ -262,6 +262,10 @@ class _NormalCalculatePageState extends ConsumerState<NormalCalculatePage> {
                           context: context,
                           builder: (context) {
                             return AlertDialog(
+                              icon: const Icon(
+                                Icons.error,
+                                size: 40,
+                              ),
                               title: const Text('イベント数が上限に達しました'),
                               content: const Text(
                                   'イベント数が10件を超えたため、これ以上保存できません。イベントを削除してください。'),
