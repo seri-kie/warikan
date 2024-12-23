@@ -51,6 +51,7 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   intl: ^0.20.1
   keyboard_actions: ^4.2.0
+  flutter_launcher_icons: ^0.14.2
   
 
 dev_dependencies:
@@ -98,7 +99,6 @@ flutter:
       fonts:
         - asset: fonts/NotoSansJP-Regular.otf
         
-        
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
@@ -109,3 +109,7 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
     - assets/images/
+
+flutter_launcher_icons:
+  ios: true
+  image_path: "assets/images/icon_ios.png"
