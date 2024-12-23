@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:warikan/gen/assets.gen.dart';
 import 'package:warikan/models/calc_slope.dart';
 import 'package:warikan/models/keisha_group.dart';
 import 'package:warikan/pages/keisha_calculate_page/keisha_calculate_page_controller.dart';
@@ -150,7 +149,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF198D34),
                         foregroundColor: Colors.white,
-                        side: BorderSide(color: Colors.white, width: 3),
+                        side: const BorderSide(color: Colors.white, width: 3),
                       ),
                       onPressed: () {
                         // 一つでも入力ミスがあればreturn
