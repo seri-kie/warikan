@@ -49,6 +49,7 @@ class _CalculatePageState extends State<CalculatePage>
           ),
         ),
         body: TabBarView(
+          physics: const NeverScrollableScrollPhysics(),
           controller: _tabController,
           children: [
             NormalCalculatePage(isar: widget.isar),

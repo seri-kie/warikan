@@ -207,6 +207,12 @@ class _NewGroupPageState extends State<NewGroupPage> {
                         groupNameController.clear();
                         totalPeopleController.clear();
                         amountController.clear();
+                        //前の画面に戻る
+                        Navigator.pop(context);
+                        ref
+                            .read(
+                                keishaCalculatePageControllerProvider.notifier)
+                            .divide();
                         // グループ追加完了のメッセージを表示
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('グループが追加されました')),

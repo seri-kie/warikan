@@ -22,21 +22,26 @@ class _EventDetailPageNormalState extends State<EventDetailPageNormal> {
   @override
   void initState() {
     super.initState();
-    _nameControllers = List.generate(widget.event.remainPeople,
-        (index) => TextEditingController(text: widget.event.nameList[index]));
-    _payList = widget.event.payList;
+    _initializeControllers();
   }
 
   @override
-  void dispose() async {
+  void dispose() {
     for (var controller in _nameControllers) {
       controller.dispose();
     }
     super.dispose();
   }
 
+  void _initializeControllers() {
+    _nameControllers = List.generate(
+      widget.event.remainPeople,
+      (index) => TextEditingController(text: widget.event.nameList[index]),
+    );
+    _payList = widget.event.payList;
+  }
+
   Future<void> _updateEventData() async {
-    // 名前のリストと支払いのリストを更新
     widget.event.nameList
         .setAll(0, _nameControllers.map((controller) => controller.text));
     widget.event.payList.setAll(0, _payList);
@@ -44,81 +49,70 @@ class _EventDetailPageNormalState extends State<EventDetailPageNormal> {
     await widget.isar.writeTxn(() async {
       await widget.isar.eventNormals.put(widget.event);
     });
+    setState(() => _isChanged = false);
+  }
+
+  void _showDeleteDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('イベントの削除'),
+        content: const Text('本当に削除しますか？'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('キャンセル'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await widget.isar.writeTxn(() async {
+                await widget.isar.eventNormals.delete(widget.event.id);
+              });
+              if (context.mounted) {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('イベントが削除されました')),
+                );
+              }
+            },
+            child: const Text(
+              '削除',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (result == true) {
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+    }
   }
 
   void _onListChanged() {
-    setState(() {
-      _isChanged = true;
-    });
+    setState(() => _isChanged = true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final DateFormat dateFormatter = DateFormat('yyyy/MM/dd');
-    final String formattedDate = dateFormatter.format(widget.event.date);
-    final String fraction = widget.event.fraction == FractionRound.none
-        ? '処理なし'
-        : widget.event.fraction == FractionRound.roundDown
-            ? '切り下げ'
-            : '切り上げ';
-    final String difference = widget.event.fraction == FractionRound.none
-        ? 'なし'
-        : widget.event.fraction == FractionRound.roundDown
-            ? '不足'
-            : '余り';
+    final formattedDate = DateFormat('yyyy/MM/dd').format(widget.event.date);
+    final fractionText = _getFractionText(widget.event.fraction);
+    final differenceText =
+        _getDifferenceText(widget.event.difference, widget.event.fraction);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(
-          widget.event.eventName,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+        title: const Text(
+          'ノーマル割り勘詳細',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
-              onPressed: () async {
-                // 確認のダイアログを表示
-                await showDialog<bool>(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('イベントの削除'),
-                      content: const Text('本当に削除しますか？'),
-                      actions: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(false);
-                          },
-                          child: const Text('キャンセル'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            // イベントを削除する処理
-                            await widget.isar.writeTxn(() async {
-                              await widget.isar.eventNormals
-                                  .delete(widget.event.id);
-                            });
-                            if (context.mounted) {
-                              Navigator.of(context)
-                                  .popUntil((route) => route.isFirst);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('イベントが削除されました')),
-                              );
-                            }
-                          },
-                          child: const Text('削除',
-                              style: TextStyle(color: Colors.red)),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              icon: const Icon(
-                Icons.delete_forever,
-                color: Colors.red,
-                size: 35,
-              ))
+            onPressed: _showDeleteDialog,
+            icon: const Icon(Icons.delete_forever, color: Colors.red, size: 35),
+          ),
         ],
         backgroundColor: Colors.lightGreen,
         foregroundColor: Colors.white,
@@ -129,56 +123,25 @@ class _EventDetailPageNormalState extends State<EventDetailPageNormal> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'イベント名: ${widget.event.eventName}',
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              _buildEventInfo('イベント名', widget.event.eventName, 24),
+              _buildEventInfo(
+                '1人あたり',
+                widget.event.remainPerPerson % 1 == 0
+                    ? '${widget.event.remainPerPerson.toStringAsFixed(0)}円'
+                    : '${widget.event.remainPerPerson.toStringAsFixed(3)}円',
               ),
-              const SizedBox(height: 10),
-              Text(
-                widget.event.remainPerPerson % 1 == 0 // 整数の場合
-                    ? '1人あたり:${widget.event.remainPerPerson.toStringAsFixed(0)}円'
-                    : '1人あたり:${widget.event.remainPerPerson.toStringAsFixed(3)}円',
-                style: const TextStyle(fontSize: 20),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                '人数: ${widget.event.remainPeople}人',
-                style: const TextStyle(fontSize: 18),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                '端数: $fraction',
-                style: const TextStyle(fontSize: 18),
-              ),
-              const SizedBox(height: 10),
+              _buildEventInfo('人数', '${widget.event.remainPeople}人'),
+              _buildEventInfo('端数', fractionText),
               if (widget.event.difference != 0)
-                Text(
-                  widget.event.difference % 1 == 0 // 整数の場合
-                      ? '過不足:${widget.event.difference.toStringAsFixed(0)}円$difference'
-                      : '過不足:${widget.event.difference.toStringAsFixed(3)}円$difference',
-                  style: const TextStyle(fontSize: 18),
-                ),
-              const SizedBox(height: 10),
-              Text(
-                '日付: $formattedDate',
-                style: const TextStyle(fontSize: 16),
-              ),
+                _buildEventInfo('過不足', differenceText),
+              _buildEventInfo('日付', formattedDate, 16),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text('・回収チェックリスト', style: TextStyle(fontSize: 18)),
-                  // 保存ボタン
                   ElevatedButton(
-                    onPressed: _isChanged
-                        ? () async {
-                            await _updateEventData();
-                            setState(() {
-                              _isChanged = false; // 保存後はボタンを無効に
-                            });
-                          }
-                        : null,
+                    onPressed: _isChanged ? _updateEventData : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.lightGreen,
                       foregroundColor: Colors.white,
@@ -194,37 +157,59 @@ class _EventDetailPageNormalState extends State<EventDetailPageNormal> {
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: widget.event.remainPeople,
-                itemBuilder: (context, index) {
-                  return Row(
-                    children: [
-                      Checkbox(
-                        value: _payList[index],
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _payList[index] = value ?? false;
-                          });
-                          _onListChanged();
-                        },
-                      ),
-                      Expanded(
-                        child: TextFormField(
-                          controller: _nameControllers[index],
-                          decoration: InputDecoration(
-                            labelText: '名前 ${index + 1}',
-                          ),
-                          onChanged: (value) {
-                            _onListChanged();
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                },
+                itemBuilder: (context, index) => _buildChecklistItem(index),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildEventInfo(String title, String value, [double fontSize = 18]) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Text('$title: $value', style: TextStyle(fontSize: fontSize)),
+    );
+  }
+
+  Widget _buildChecklistItem(int index) {
+    return Row(
+      children: [
+        Checkbox(
+          value: _payList[index],
+          onChanged: (value) {
+            setState(() => _payList[index] = value ?? false);
+            _onListChanged();
+          },
+        ),
+        Expanded(
+          child: TextFormField(
+            controller: _nameControllers[index],
+            decoration: InputDecoration(labelText: '名前 ${index + 1}'),
+            onChanged: (_) => _onListChanged(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _getFractionText(FractionRound fraction) {
+    switch (fraction) {
+      case FractionRound.none:
+        return '処理なし';
+      case FractionRound.roundDown:
+        return '切り下げ';
+      case FractionRound.roundUp:
+        return '切り上げ';
+    }
+  }
+
+  String _getDifferenceText(double difference, FractionRound fraction) {
+    if (difference == 0) return 'なし';
+    final type = fraction == FractionRound.roundDown ? '不足' : '余り';
+    return difference % 1 == 0
+        ? '${difference.toStringAsFixed(0)}円$type'
+        : '${difference.toStringAsFixed(3)}円$type';
   }
 }
