@@ -61,14 +61,18 @@ class ResultContainerKeisha extends ConsumerWidget {
                             ),
                           ] else if (group.calcSlope == CalcSlope.discount) ...[
                             Text(
-                              '${calcResult - group.totalAmount}円',
+                              calcResult % 1 == 0
+                                  ? '${(calcResult - group.totalAmount).toStringAsFixed(0)}円'
+                                  : '${(calcResult - group.totalAmount).toStringAsFixed(3)}円',
                               overflow: TextOverflow.clip,
                               style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                           ] else if (group.calcSlope == CalcSlope.premium) ...[
                             Text(
-                              '${calcResult + group.totalAmount}円',
+                              calcResult % 1 == 0
+                                  ? '${(calcResult + group.totalAmount).toStringAsFixed(0)}円'
+                                  : '${(calcResult + group.totalAmount).toStringAsFixed(3)}円',
                               overflow: TextOverflow.clip,
                               style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),

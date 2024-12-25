@@ -1,6 +1,9 @@
+import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:warikan/models/calc_slope.dart';
+import 'package:warikan/models/event_keisha.dart';
+import 'package:warikan/models/event_normal.dart';
 import 'package:warikan/models/keisha_group.dart';
 
 part 'keisha_calculate_page_controller.g.dart';
@@ -16,6 +19,7 @@ class KeishaCalculatePageState with _$KeishaCalculatePageState {
     required int remainingPeople,
     required int groupPeople,
     required List<KeishaGroup> keishaGroups,
+    required Isar isar,
   }) = _KeishaCalculatePageState;
 }
 
@@ -23,15 +27,15 @@ class KeishaCalculatePageState with _$KeishaCalculatePageState {
 class KeishaCalculatePageController extends _$KeishaCalculatePageController {
   @override
   KeishaCalculatePageState build() {
-    return const KeishaCalculatePageState(
-      inputTotal: 0,
-      inputPeople: -1,
-      divideResult: 0.0,
-      remainingAmount: 0,
-      remainingPeople: 0,
-      groupPeople: 0,
-      keishaGroups: [],
-    );
+    return KeishaCalculatePageState(
+        inputTotal: 0,
+        inputPeople: -1,
+        divideResult: 0.0,
+        remainingAmount: 0,
+        remainingPeople: 0,
+        groupPeople: 0,
+        keishaGroups: [],
+        isar: Isar.getInstance()!);
   }
 
   void setInputTotal(int value) {
@@ -61,6 +65,12 @@ class KeishaCalculatePageController extends _$KeishaCalculatePageController {
         discountAndPremiumCalc();
       }
     }
+  }
+
+  Future<int> getEventCount() async {
+    final eventCountNormal = await state.isar.eventNormals.count();
+    final eventCountKeisha = await state.isar.eventKeishas.count();
+    return eventCountNormal + eventCountKeisha;
   }
 
   // キリよく！グループの計算処理

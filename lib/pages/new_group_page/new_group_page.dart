@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:warikan/gen/assets.gen.dart';
 import 'package:warikan/models/calc_slope.dart';
 import 'package:warikan/models/keisha_group.dart';
 import 'package:warikan/pages/keisha_calculate_page/keisha_calculate_page_controller.dart';
@@ -143,76 +142,86 @@ class _NewGroupPageState extends State<NewGroupPage> {
                 const SizedBox(
                   height: 25,
                 ),
-                //　グループ追加ボタンを押したらKeishaGroupのインタンスを作成して追加する
-                InkWell(
-                  customBorder: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0), // リップルを角丸に
-                  ),
-                  onTap: () {
-                    // 一つでも入力ミスがあればreturn
-                    bool inputError = false;
-                    // 人数のチェック
-                    if (totalPeople <= 0) {
-                      setState(() {
-                        hasPeople = false;
-                      });
-                      inputError = true;
-                    } else {
-                      hasPeople = true;
-                    }
-                    if (!ref
-                        .read(keishaCalculatePageControllerProvider.notifier)
-                        .canAddGroup(totalPeople)) {
-                      setState(() {
-                        canAddPeople = false;
-                      });
-                      inputError = true;
-                    } else {
-                      canAddPeople = true;
-                    }
-                    // グループ名のチェック
-                    if (groupName.isEmpty) {
-                      setState(() {
-                        hasGroupName = false;
-                      });
-                      inputError = true;
-                    } else {
-                      hasGroupName = true;
-                    }
-                    // 金額のチェック
-                    if (amount < 0) {
-                      setState(() {
-                        hasAmount = false;
-                      });
-                      inputError = true;
-                    } else {
-                      hasAmount = true;
-                    }
-                    if (inputError) {
-                      return;
-                    }
-                    final keishaGroup = KeishaGroup(
-                        groupName: groupName,
-                        totalPeople: totalPeople,
-                        totalAmount: amount,
-                        calcSlope: selected.first);
-                    ref
-                        .read(keishaCalculatePageControllerProvider.notifier)
-                        .addGroup(keishaGroup);
-                    groupNameController.clear();
-                    totalPeopleController.clear();
-                    amountController.clear();
-                    // グループ追加完了のメッセージを表示
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('グループが追加されました')),
-                    );
-                  },
-                  child: Image.asset(
-                    Assets.images.groupAddButton.path,
-                    height: 75, // ボタンの高さを指定
-                    fit: BoxFit.fitHeight, // 画像をボタンサイズにフィット
-                  ),
-                )
+                SizedBox(
+                  width: 200,
+                  height: 55,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF198D34),
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.white, width: 3),
+                      ),
+                      onPressed: () {
+                        // 一つでも入力ミスがあればreturn
+                        bool inputError = false;
+                        // 人数のチェック
+                        if (totalPeople <= 0) {
+                          setState(() {
+                            hasPeople = false;
+                          });
+                          inputError = true;
+                        } else {
+                          hasPeople = true;
+                        }
+                        if (!ref
+                            .read(
+                                keishaCalculatePageControllerProvider.notifier)
+                            .canAddGroup(totalPeople)) {
+                          setState(() {
+                            canAddPeople = false;
+                          });
+                          inputError = true;
+                        } else {
+                          canAddPeople = true;
+                        }
+                        // グループ名のチェック
+                        if (groupName.isEmpty) {
+                          setState(() {
+                            hasGroupName = false;
+                          });
+                          inputError = true;
+                        } else {
+                          hasGroupName = true;
+                        }
+                        // 金額のチェック
+                        if (amount < 0) {
+                          setState(() {
+                            hasAmount = false;
+                          });
+                          inputError = true;
+                        } else {
+                          hasAmount = true;
+                        }
+                        if (inputError) {
+                          return;
+                        }
+                        final keishaGroup = KeishaGroup(
+                            groupName: groupName,
+                            totalPeople: totalPeople,
+                            totalAmount: amount,
+                            calcSlope: selected.first);
+                        ref
+                            .read(
+                                keishaCalculatePageControllerProvider.notifier)
+                            .addGroup(keishaGroup);
+                        groupNameController.clear();
+                        totalPeopleController.clear();
+                        amountController.clear();
+                        //前の画面に戻る
+                        Navigator.pop(context);
+                        ref
+                            .read(
+                                keishaCalculatePageControllerProvider.notifier)
+                            .divide();
+                        // グループ追加完了のメッセージを表示
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('グループが追加されました')),
+                        );
+                      },
+                      child: const Text('グループ追加',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold))),
+                ),
               ],
             ),
           ),

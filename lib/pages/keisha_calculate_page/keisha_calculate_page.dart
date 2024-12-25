@@ -238,7 +238,37 @@ class _KeishaCalculatePageState extends ConsumerState<KeishaCalculatePage> {
           onPressed: totalAmountController.text.isEmpty ||
                   totalPeopleController.text.isEmpty
               ? null
-              : () {
+              : () async {
+                  // イベント数が10件を超える場合は保存できない
+                  final eventCount = await ref
+                      .read(keishaCalculatePageControllerProvider.notifier)
+                      .getEventCount();
+                  if (eventCount >= 10) {
+                    if (context.mounted) {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              icon: const Icon(
+                                Icons.error,
+                                size: 40,
+                              ),
+                              title: const Text('イベント数が上限に達しました'),
+                              content: const Text(
+                                  'イベント数が10件を超えたため、これ以上保存できません。イベントを削除してください。'),
+                              actions: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('閉じる'),
+                                )
+                              ],
+                            );
+                          });
+                    }
+                    return;
+                  }
                   final state = ref.read(keishaCalculatePageControllerProvider);
                   final List<KeishaGroupForIsar> keishaGroups = [];
                   for (final group in state.keishaGroups) {
@@ -254,14 +284,16 @@ class _KeishaCalculatePageState extends ConsumerState<KeishaCalculatePage> {
                       remainPeople: state.remainingPeople,
                       allPeople: int.parse(totalPeopleController.text),
                       date: DateTime.now());
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return EventSavePopUpKeisha(
-                          isar: widget.isar,
-                          event: eventKeisha,
-                        );
-                      });
+                  if (context.mounted) {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return EventSavePopUpKeisha(
+                            isar: widget.isar,
+                            event: eventKeisha,
+                          );
+                        });
+                  }
                 },
           child: const Text('イベントを保存',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
