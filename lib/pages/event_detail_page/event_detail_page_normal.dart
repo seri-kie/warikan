@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
+import 'package:warikan/ads/ad_banner.dart';
 import 'package:warikan/models/event_normal.dart';
 import 'package:warikan/pages/normal_calculate_page/normal_calculate_page_controller.dart';
 
@@ -18,10 +20,13 @@ class _EventDetailPageNormalState extends State<EventDetailPageNormal> {
   late List<TextEditingController> _nameControllers;
   late List<bool> _payList;
   bool _isChanged = false;
+  late BannerAd bannerAd;
 
   @override
   void initState() {
     super.initState();
+    bannerAd = AdBanner.createBannerAd();
+    bannerAd.load();
     _initializeControllers();
   }
 
@@ -100,7 +105,7 @@ class _EventDetailPageNormalState extends State<EventDetailPageNormal> {
     final fractionText = _getFractionText(widget.event.fraction);
     final differenceText =
         _getDifferenceText(widget.event.difference, widget.event.fraction);
-
+    final AdWidget bannerAdWidget = AdWidget(ad: bannerAd);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -163,6 +168,10 @@ class _EventDetailPageNormalState extends State<EventDetailPageNormal> {
           ),
         ),
       ),
+      bottomNavigationBar: SizedBox(
+          height: bannerAd.size.height.toDouble(),
+          width: bannerAd.size.width.toDouble(),
+          child: bannerAdWidget),
     );
   }
 

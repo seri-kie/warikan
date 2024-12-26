@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
+import 'package:warikan/ads/ad_banner.dart';
 import 'package:warikan/models/calc_slope.dart';
 import 'package:warikan/models/event_keisha.dart';
 import 'package:warikan/models/keisha_group_for_isar.dart';
@@ -23,10 +25,13 @@ class _EventDetailPageKeishaState extends State<EventDetailPageKeisha> {
   late List<TextEditingController> _nameControllers;
   late List<bool> _payList;
   bool _isChanged = false;
+  late BannerAd bannerAd;
 
   @override
   void initState() {
     super.initState();
+    bannerAd = AdBanner.createBannerAd();
+    bannerAd.load();
     _nameControllers = List.generate(
       widget.event.allPeople,
       (index) => TextEditingController(text: widget.event.nameList[index]),
@@ -86,12 +91,16 @@ class _EventDetailPageKeishaState extends State<EventDetailPageKeisha> {
   Widget build(BuildContext context) {
     final String formattedDate =
         DateFormat('yyyy/MM/dd').format(widget.event.date);
-
+    final AdWidget bannerAdWidget = AdWidget(ad: bannerAd);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(widget.event.eventName,
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          '傾斜割り勘詳細',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () => _showDeleteDialog(context),
@@ -99,6 +108,7 @@ class _EventDetailPageKeishaState extends State<EventDetailPageKeisha> {
           ),
         ],
         backgroundColor: Colors.lightBlue,
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -113,6 +123,10 @@ class _EventDetailPageKeishaState extends State<EventDetailPageKeisha> {
           ),
         ),
       ),
+      bottomNavigationBar: SizedBox(
+          height: bannerAd.size.height.toDouble(),
+          width: bannerAd.size.width.toDouble(),
+          child: bannerAdWidget),
     );
   }
 

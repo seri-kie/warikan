@@ -62,11 +62,7 @@ class _KeishaCalculatePageState extends ConsumerState<KeishaCalculatePage> {
               ),
               Column(
                 children: [
-                  if (keishaGroups.isEmpty) ...[
-                    const Center(
-                      child: Text('グループがありません'),
-                    ),
-                  ] else ...[
+                  if (keishaGroups.isNotEmpty) ...[
                     const Text('傾斜グループ一覧'),
                     ConstrainedBox(
                       constraints: const BoxConstraints(
@@ -138,7 +134,7 @@ class _KeishaCalculatePageState extends ConsumerState<KeishaCalculatePage> {
                 ],
               ),
               const ResultContainerKeisha(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               eventSaveButton(context, ref),
             ],
           ),
