@@ -2,24 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:warikan/models/event_normal.dart';
 
-class EventSavePopUp extends StatefulWidget {
-  const EventSavePopUp({super.key, required this.isar, required this.event});
+class EventSavePopUp extends StatelessWidget {
+  EventSavePopUp({super.key, required this.isar, required this.event});
+  final TextEditingController eventNameController = TextEditingController();
   final Isar isar;
   final EventNormal event;
-
-  @override
-  State<EventSavePopUp> createState() => _EventSavePopUpState();
-}
-
-class _EventSavePopUpState extends State<EventSavePopUp> {
-  final TextEditingController eventNameController = TextEditingController();
-
-  @override
-  void dispose() {
-    eventNameController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -57,14 +44,14 @@ class _EventSavePopUpState extends State<EventSavePopUp> {
           onPressed: () async {
             String eventName = eventNameController.text;
             if (eventName.isNotEmpty) {
-              widget.event.eventName = eventName;
+              event.eventName = eventName;
             }
-            widget.event.nameList =
-                List<String>.generate(widget.event.remainPeople, (_) => '');
-            widget.event.payList =
-                List<bool>.generate(widget.event.remainPeople, (_) => false);
-            await widget.isar.writeTxn(() async {
-              await widget.isar.eventNormals.put(widget.event);
+            event.nameList =
+                List<String>.generate(event.remainPeople, (_) => '');
+            event.payList =
+                List<bool>.generate(event.remainPeople, (_) => false);
+            await isar.writeTxn(() async {
+              await isar.eventNormals.put(event);
             });
 
             if (context.mounted) {

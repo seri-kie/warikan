@@ -91,7 +91,7 @@ class _NormalCalculatePageState extends ConsumerState<NormalCalculatePage> {
             _fractionChoiceChips(ref),
           const ResultContainer(),
           const SizedBox(
-            height: 10,
+            height: 20,
           ),
           eventSaveButton(context, ref),
         ],
