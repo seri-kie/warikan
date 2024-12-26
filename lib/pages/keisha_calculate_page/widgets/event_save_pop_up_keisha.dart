@@ -2,11 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:warikan/models/event_keisha.dart';
 
-class EventSavePopUpKeisha extends StatelessWidget {
+class EventSavePopUpKeisha extends StatefulWidget {
   EventSavePopUpKeisha({super.key, required this.isar, required this.event});
-  final TextEditingController eventNameController = TextEditingController();
   final Isar isar;
   final EventKeisha event;
+
+  @override
+  State<EventSavePopUpKeisha> createState() => _EventSavePopUpKeishaState();
+}
+
+class _EventSavePopUpKeishaState extends State<EventSavePopUpKeisha> {
+  final TextEditingController eventNameController = TextEditingController();
+
+  @override
+  void dispose() {
+    eventNameController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -44,12 +57,14 @@ class EventSavePopUpKeisha extends StatelessWidget {
           onPressed: () async {
             String eventName = eventNameController.text;
             if (eventName.isNotEmpty) {
-              event.eventName = eventName;
+              widget.event.eventName = eventName;
             }
-            event.nameList = List<String>.generate(event.allPeople, (_) => '');
-            event.payList = List<bool>.generate(event.allPeople, (_) => false);
-            await isar.writeTxn(() async {
-              await isar.eventKeishas.put(event);
+            widget.event.nameList =
+                List<String>.generate(widget.event.allPeople, (_) => '');
+            widget.event.payList =
+                List<bool>.generate(widget.event.allPeople, (_) => false);
+            await widget.isar.writeTxn(() async {
+              await widget.isar.eventKeishas.put(widget.event);
             });
             if (context.mounted) {
               // グループ追加完了のメッセージを表示

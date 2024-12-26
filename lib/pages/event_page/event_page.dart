@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:isar/isar.dart';
+import 'package:warikan/ads/ad_banner.dart';
 import 'package:warikan/models/event_keisha.dart';
 import 'package:warikan/models/event_normal.dart';
 import 'package:warikan/pages/event_page/widgets/list_tile_keisha.dart';
@@ -16,11 +18,13 @@ class EventPage extends StatefulWidget {
 
 class _EventPageState extends State<EventPage> {
   late Future<List<dynamic>> _eventsFuture;
-
+  late BannerAd bannerAd;
   @override
   void initState() {
     super.initState();
     _loadEvents();
+    bannerAd = AdBanner.createBannerAd();
+    bannerAd.load();
   }
 
   void _loadEvents() {
@@ -39,60 +43,67 @@ class _EventPageState extends State<EventPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<dynamic>>(
-      future: _eventsFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('エラーが発生しました: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('イベントがありません'));
-        } else {
-          final events = snapshot.data!;
-          return AnimationLimiter(
-            child: ListView.builder(
-              itemCount: events.length,
-              itemBuilder: (context, index) {
-                final event = events[index];
-                if (event is EventNormal) {
-                  return AnimationConfiguration.staggeredList(
-                    position: index,
-                    duration: const Duration(milliseconds: 375),
-                    child: SlideAnimation(
-                      verticalOffset: 50.0,
-                      child: FadeInAnimation(
-                        child: ListTileNormal(
-                          event: event,
-                          isar: widget.isar,
-                          onRefresh: _loadEvents, // 再読み込み用のコールバック
+    final AdWidget bannerAdWidget = AdWidget(ad: bannerAd);
+    return Scaffold(
+      body: FutureBuilder<List<dynamic>>(
+        future: _eventsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('エラーが発生しました: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('イベントがありません'));
+          } else {
+            final events = snapshot.data!;
+            return AnimationLimiter(
+              child: ListView.builder(
+                itemCount: events.length,
+                itemBuilder: (context, index) {
+                  final event = events[index];
+                  if (event is EventNormal) {
+                    return AnimationConfiguration.staggeredList(
+                      position: index,
+                      duration: const Duration(milliseconds: 375),
+                      child: SlideAnimation(
+                        verticalOffset: 50.0,
+                        child: FadeInAnimation(
+                          child: ListTileNormal(
+                            event: event,
+                            isar: widget.isar,
+                            onRefresh: _loadEvents, // 再読み込み用のコールバック
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                } else if (event is EventKeisha) {
-                  return AnimationConfiguration.staggeredList(
-                    position: index,
-                    duration: const Duration(milliseconds: 375),
-                    child: SlideAnimation(
-                      verticalOffset: 50.0,
-                      child: FadeInAnimation(
-                        child: ListTileKeisha(
-                          event: event,
-                          isar: widget.isar,
-                          onRefresh: _loadEvents,
+                    );
+                  } else if (event is EventKeisha) {
+                    return AnimationConfiguration.staggeredList(
+                      position: index,
+                      duration: const Duration(milliseconds: 375),
+                      child: SlideAnimation(
+                        verticalOffset: 50.0,
+                        child: FadeInAnimation(
+                          child: ListTileKeisha(
+                            event: event,
+                            isar: widget.isar,
+                            onRefresh: _loadEvents,
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                } else {
-                  return const SizedBox.shrink();
-                }
-              },
-            ),
-          );
-        }
-      },
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
+              ),
+            );
+          }
+        },
+      ),
+      bottomNavigationBar: SizedBox(
+          height: bannerAd.size.height.toDouble(),
+          width: bannerAd.size.width.toDouble(),
+          child: bannerAdWidget),
     );
   }
 }
