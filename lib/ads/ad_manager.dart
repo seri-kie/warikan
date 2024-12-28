@@ -17,7 +17,8 @@ class AdManager {
     if (Platform.isAndroid) {
       return "ca-app-pub-3940256099942544/9214589741"; // テストID
     } else if (Platform.isIOS) {
-      return "ca-app-pub-3940256099942544/2435281174"; // テストID
+      // return "ca-app-pub-3940256099942544/2435281174"; // テストID
+      return "ca-app-pub-7585032538907137/6456714286"; // 本番ID
     } else {
       throw UnsupportedError("Unsupported platform");
     }
