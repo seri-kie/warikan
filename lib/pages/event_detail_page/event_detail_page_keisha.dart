@@ -92,41 +92,45 @@ class _EventDetailPageKeishaState extends State<EventDetailPageKeisha> {
     final String formattedDate =
         DateFormat('yyyy/MM/dd').format(widget.event.date);
     final AdWidget bannerAdWidget = AdWidget(ad: bannerAd);
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text(
-          '傾斜割り勘詳細',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: const Text(
+            '傾斜割り勘詳細',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () => _showDeleteDialog(context),
+              icon:
+                  const Icon(Icons.delete_forever, color: Colors.red, size: 35),
+            ),
+          ],
+          backgroundColor: Colors.lightBlue,
+          foregroundColor: Colors.white,
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildEventInfo(formattedDate),
+                const SizedBox(height: 10),
+                _buildCheckList(),
+              ],
+            ),
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () => _showDeleteDialog(context),
-            icon: const Icon(Icons.delete_forever, color: Colors.red, size: 35),
-          ),
-        ],
-        backgroundColor: Colors.lightBlue,
-        foregroundColor: Colors.white,
+        bottomNavigationBar: SizedBox(
+            height: bannerAd.size.height.toDouble(),
+            width: bannerAd.size.width.toDouble(),
+            child: bannerAdWidget),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildEventInfo(formattedDate),
-              const SizedBox(height: 10),
-              _buildCheckList(),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: SizedBox(
-          height: bannerAd.size.height.toDouble(),
-          width: bannerAd.size.width.toDouble(),
-          child: bannerAdWidget),
     );
   }
 

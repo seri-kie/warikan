@@ -106,72 +106,76 @@ class _EventDetailPageNormalState extends State<EventDetailPageNormal> {
     final differenceText =
         _getDifferenceText(widget.event.difference, widget.event.fraction);
     final AdWidget bannerAdWidget = AdWidget(ad: bannerAd);
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text(
-          'ノーマル割り勘詳細',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          IconButton(
-            onPressed: _showDeleteDialog,
-            icon: const Icon(Icons.delete_forever, color: Colors.red, size: 35),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: const Text(
+            'ノーマル割り勘詳細',
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-        ],
-        backgroundColor: Colors.lightGreen,
-        foregroundColor: Colors.white,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildEventInfo('イベント名', widget.event.eventName, 24),
-              _buildEventInfo(
-                '1人あたり',
-                widget.event.remainPerPerson % 1 == 0
-                    ? '${widget.event.remainPerPerson.toStringAsFixed(0)}円'
-                    : '${widget.event.remainPerPerson.toStringAsFixed(3)}円',
-              ),
-              _buildEventInfo('人数', '${widget.event.remainPeople}人'),
-              _buildEventInfo('端数', fractionText),
-              if (widget.event.difference != 0)
-                _buildEventInfo('過不足', differenceText),
-              _buildEventInfo('日付', formattedDate, 16),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('・回収チェックリスト', style: TextStyle(fontSize: 18)),
-                  ElevatedButton(
-                    onPressed: _isChanged ? _updateEventData : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.lightGreen,
-                      foregroundColor: Colors.white,
+          actions: [
+            IconButton(
+              onPressed: _showDeleteDialog,
+              icon:
+                  const Icon(Icons.delete_forever, color: Colors.red, size: 35),
+            ),
+          ],
+          backgroundColor: Colors.lightGreen,
+          foregroundColor: Colors.white,
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildEventInfo('イベント名', widget.event.eventName, 24),
+                _buildEventInfo(
+                  '1人あたり',
+                  widget.event.remainPerPerson % 1 == 0
+                      ? '${widget.event.remainPerPerson.toStringAsFixed(0)}円'
+                      : '${widget.event.remainPerPerson.toStringAsFixed(3)}円',
+                ),
+                _buildEventInfo('人数', '${widget.event.remainPeople}人'),
+                _buildEventInfo('端数', fractionText),
+                if (widget.event.difference != 0)
+                  _buildEventInfo('過不足', differenceText),
+                _buildEventInfo('日付', formattedDate, 16),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('・回収チェックリスト', style: TextStyle(fontSize: 18)),
+                    ElevatedButton(
+                      onPressed: _isChanged ? _updateEventData : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.lightGreen,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text(
+                        '保存',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    child: const Text(
-                      '保存',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: widget.event.remainPeople,
-                itemBuilder: (context, index) => _buildChecklistItem(index),
-              ),
-            ],
+                  ],
+                ),
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: widget.event.remainPeople,
+                  itemBuilder: (context, index) => _buildChecklistItem(index),
+                ),
+              ],
+            ),
           ),
         ),
+        bottomNavigationBar: SizedBox(
+            height: bannerAd.size.height.toDouble(),
+            width: bannerAd.size.width.toDouble(),
+            child: bannerAdWidget),
       ),
-      bottomNavigationBar: SizedBox(
-          height: bannerAd.size.height.toDouble(),
-          width: bannerAd.size.width.toDouble(),
-          child: bannerAdWidget),
     );
   }
 
