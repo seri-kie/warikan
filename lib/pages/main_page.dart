@@ -24,9 +24,9 @@ class _MyHomePageState extends State<MainPage> {
   // レビュー依頼の設定
   RateMyApp rateMyApp = RateMyApp(
     preferencesPrefix: 'rateMyApp_',
-    minDays: 0, // Show rate popup on first day of install.
+    minDays: 3, // Show rate popup on first day of install.
     minLaunches:
-        1, // Show rate popup after 5 launches of app after minDays is passed.
+        3, // Show rate popup after 5 launches of app after minDays is passed.
     remindDays: 5,
     remindLaunches: 7,
   );
