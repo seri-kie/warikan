@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
+import 'package:rate_my_app/rate_my_app.dart';
 import 'package:warikan/pages/calculate_page.dart';
 import 'package:warikan/pages/event_page/event_page.dart';
 import 'package:warikan/pages/setting_page.dart';
@@ -20,6 +21,16 @@ class _MyHomePageState extends State<MainPage> {
 
   late final List<Widget> pages;
 
+  // レビュー依頼の設定
+  RateMyApp rateMyApp = RateMyApp(
+    preferencesPrefix: 'rateMyApp_',
+    minDays: 1, // Show rate popup on first day of install.
+    minLaunches:
+        2, // Show rate popup after 5 launches of app after minDays is passed.
+    remindDays: 5,
+    remindLaunches: 5,
+  );
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +43,14 @@ class _MyHomePageState extends State<MainPage> {
       ),
       const SettingPage()
     ];
+
+    rateMyApp.init().then((_) {
+      if (rateMyApp.shouldOpenDialog) {
+        rateMyApp.showRateDialog(
+          context,
+        );
+      }
+    });
   }
 
   @override

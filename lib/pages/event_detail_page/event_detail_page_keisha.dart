@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:warikan/ads/ad_banner.dart';
+import 'package:warikan/ads/ad_manager.dart';
 import 'package:warikan/models/calc_slope.dart';
 import 'package:warikan/models/event_keisha.dart';
 import 'package:warikan/models/keisha_group_for_isar.dart';
@@ -26,12 +28,14 @@ class _EventDetailPageKeishaState extends State<EventDetailPageKeisha> {
   late List<bool> _payList;
   bool _isChanged = false;
   late BannerAd bannerAd;
+  late InterstitialAd interstitialAd;
 
   @override
   void initState() {
     super.initState();
     bannerAd = AdBanner.createBannerAd();
     bannerAd.load();
+    interstitialAdJudge();
     _nameControllers = List.generate(
       widget.event.allPeople,
       (index) => TextEditingController(text: widget.event.nameList[index]),
@@ -45,6 +49,42 @@ class _EventDetailPageKeishaState extends State<EventDetailPageKeisha> {
       controller.dispose();
     }
     super.dispose();
+  }
+
+  void interstitialAdJudge() async {
+    bool showInterstitial = await _detailPageCheckCounter();
+    if (showInterstitial) {
+      loadInterstitialAd();
+    }
+  }
+
+  void loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdManager.interstitialAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          interstitialAd = ad;
+          interstitialAd.show();
+          debugPrint('Interstitial ad loaded.');
+        },
+        onAdFailedToLoad: (error) {
+          debugPrint('Interstitial ad failed to load: $error');
+        },
+      ),
+    );
+  }
+
+  Future<bool> _detailPageCheckCounter() async {
+    final prefs = await SharedPreferences.getInstance();
+    int adCount = prefs.getInt('adCount') ?? 0;
+    adCount++;
+    await prefs.setInt('adCount', adCount);
+    if (adCount >= 5) {
+      await prefs.remove('adCount'); // カウントをリセット
+      return true;
+    }
+    return false;
   }
 
   Future<void> _updateEventData() async {

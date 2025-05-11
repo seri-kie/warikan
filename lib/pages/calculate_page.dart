@@ -49,8 +49,8 @@ class _CalculatePageState extends State<CalculatePage>
           title: TabBar(
             controller: _tabController,
             tabs: const [
-              Tab(text: 'ノーマル割り勘'),
               Tab(text: '傾斜割り勘'),
+              Tab(text: 'ノーマル割り勘'),
             ],
           ),
         ),
@@ -58,8 +58,8 @@ class _CalculatePageState extends State<CalculatePage>
           physics: const NeverScrollableScrollPhysics(),
           controller: _tabController,
           children: [
-            NormalCalculatePage(isar: widget.isar),
             KeishaCalculatePage(isar: widget.isar),
+            NormalCalculatePage(isar: widget.isar),
           ],
         ),
         bottomNavigationBar: SizedBox(

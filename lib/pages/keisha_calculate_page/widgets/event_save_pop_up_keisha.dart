@@ -3,7 +3,7 @@ import 'package:isar/isar.dart';
 import 'package:warikan/models/event_keisha.dart';
 
 class EventSavePopUpKeisha extends StatefulWidget {
-  EventSavePopUpKeisha({super.key, required this.isar, required this.event});
+  const EventSavePopUpKeisha({super.key, required this.isar, required this.event});
   final Isar isar;
   final EventKeisha event;
 
